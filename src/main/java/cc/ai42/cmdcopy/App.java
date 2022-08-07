@@ -6,9 +6,7 @@ import io.javalin.http.staticfiles.Location;
 import java.util.Map;
 
 public class App {
-
     public static void main(String[] args) {
-
         @SuppressWarnings("resource")
         Javalin app = Javalin.create(config -> {
             config.addStaticFiles(staticFiles -> {
@@ -18,9 +16,6 @@ public class App {
             });
         }).start(7070);
 
-        app.get("/api/hello", ctx -> {
-            var result = Map.of("hello", "world");
-            ctx.json(result);
-        });
+        app.get("/api/hello", Handle.hello);
     }
 }
