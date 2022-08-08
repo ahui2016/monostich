@@ -35,18 +35,16 @@ public record CmdGroup(String id, String notes, String[] entries, long created) 
 class CmdGroupMapper implements RowMapper<CmdGroup> {
     @Override
     public CmdGroup map(ResultSet rs, StatementContext ctx) throws SQLException {
-        byte[] blob = rs.getBytes("entries");
         var id = rs.getString("id");
         var notes = rs.getString("notes");
+        var blob = rs.getBytes("entries");
+        String[] entries;
         try {
-            return new CmdGroup(
-                    id,
-                    notes,
-                    new ObjectMapper().readValue(blob, String[].class),
-                    rs.getLong("created")
-            );
+            entries = new ObjectMapper().readValue(blob, String[].class);
         } catch (IOException e) {
             throw new RuntimeException("CmdGroupMapper.map: " + id + notes);
         }
+        var created = rs.getLong("created");
+        return new CmdGroup(id, notes, entries, created);
     }
 }
