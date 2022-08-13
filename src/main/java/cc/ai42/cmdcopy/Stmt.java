@@ -10,6 +10,7 @@ public class Stmt {
           created   INT    NOT NULL
         );
         
+        CREATE INDEX IF NOT EXISTS idx_cmdentry_notes ON cmdentry(notes);
         CREATE INDEX IF NOT EXISTS idx_cmdentry_created ON cmdentry(created);
         
         CREATE TABLE IF NOT EXISTS cmdgroup
@@ -20,6 +21,7 @@ public class Stmt {
           created   INT    NOT NULL
         );
 
+        CREATE INDEX IF NOT EXISTS idx_cmdgroup_notes ON cmdgroup(notes);
         CREATE INDEX IF NOT EXISTS idx_cmdgroup_created ON cmdgroup(created);
         """;
 

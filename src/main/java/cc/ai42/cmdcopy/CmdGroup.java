@@ -27,7 +27,7 @@ public record CmdGroup(String id, String notes, String[] entries, long created) 
                     "created", created
             );
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("CmdGroup.toMap: " + id + notes);
+            throw new RuntimeException("CmdGroup.toMap: " + e + id + notes);
         }
     }
 }
@@ -42,7 +42,7 @@ class CmdGroupMapper implements RowMapper<CmdGroup> {
         try {
             entries = new ObjectMapper().readValue(blob, String[].class);
         } catch (IOException e) {
-            throw new RuntimeException("CmdGroupMapper.map: " + id + notes);
+            throw new RuntimeException("CmdGroupMapper.map: " + e + id + notes);
         }
         var created = rs.getLong("created");
         return new CmdGroup(id, notes, entries, created);

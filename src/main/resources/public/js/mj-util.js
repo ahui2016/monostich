@@ -34,6 +34,36 @@ function enable(obj) {
 }
 
 /**
+ * @param {string} text 
+ * @returns {mjElement}
+ */
+function span(text) {
+    return m('span').text(text);
+}
+
+/**
+ * @param {mjComponent} list 
+ * @param {mjComponent[]} items 
+ */
+function prependToList(list, items) {
+    items.forEach(item => {
+        list.elem().prepend(m(item));
+        if (item.init) item.init();
+    });
+}
+
+/**
+ * @param {mjComponent} list 
+ * @param {mjComponent[]} items 
+ */
+function appendToList(list, items) {
+    items.forEach(item => {
+        list.elem().append(m(item));
+        if (item.init) item.init();
+    });
+}
+
+/**
  * @param align 目前只接受 "center", 不接受其他值。
  */
 function createLoading(align) {
@@ -72,7 +102,7 @@ export function CreateAlerts(max) {
     };
 
     /**
-     * @param msgType: "success" | "danger" | "info" | "primary"
+     * @param {"success" | "danger" | "info" | "primary"} msgType
      */
     alerts.insert = (msgType, msg) => {
         const time = dayjs().format("HH:mm:ss");
@@ -99,11 +129,46 @@ export function CreateAlerts(max) {
 }
 
 /**
- * @param obj: mjElement | mjComponent
- * @param trim?: "trim"
+ * @param {mjElement | mjComponent} obj
+ * @param {"trim"?} trim
+ * @returns {string}
  */
 function valOf(obj, trim) {
     let s = "elem" in obj ? obj.elem().val() : obj.val();
     return trim == "trim" ? s.trim() : s;
 }
 
+/**
+ * @param {mjElement | mjComponent} obj
+ */
+function focus(obj) {
+    if ("elem" in obj) obj = obj.elem();
+    setTimeout(() => { obj.trigger("focus") }, 300);
+}
+
+/*
+interface LinkOptions {
+    text?: string;
+    title?: string;
+    blank?: boolean;
+}
+*/
+
+/**
+ * @param {string} href 
+ * @param {LinkOptions?} options LinkOptions{text?: string, title?: string, blank?: "blank"}
+ * @returns {mjElement}
+ */
+function LinkElem(href, options) {
+    if (!options) {
+        return m("a").text(href).attr("href", href);
+    }
+    if (!options.text)
+        options.text = href;
+    const link = m("a").text(options.text).attr("href", href);
+    if (options.title)
+        link.attr("title", options.title);
+    if (options.blank)
+        link.attr("target", "_blank");
+    return link;
+}

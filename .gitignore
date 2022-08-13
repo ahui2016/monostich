@@ -15,3 +15,6 @@ buildNumber.properties
 .idea/vcs.xml
 .idea/encodings.xml
 db/cmdcopy.sqlite
+.classpath
+.project
+.settings/

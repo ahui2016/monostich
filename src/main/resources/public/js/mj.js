@@ -5,7 +5,8 @@
 
 /**
  * 函数名 m 来源于 Mithril, 也可以理解为 make 的简称，用来创建一个元素。
- * 该元素的类型是 JQuery<HTMLElement>
+ * @param {string | mjComponent} obj
+ * @returns {mjElement} mjElement 就是 `JQuery<HTMLElement>`
  */
 function m(obj) {
     if (typeof obj == 'string') {
@@ -14,6 +15,11 @@ function m(obj) {
     return obj.view;
 }
 
+/**
+ * @param {string} name 
+ * @param {string} id 
+ * @returns {mjComponent}
+ */
 function newComponent(name, id) {
     return {
         id: '#' + id,
@@ -38,6 +44,9 @@ interface ComponentOptions {
 /**
  * 函数名 cc 意思是 create a component, 用来创建一个简单的组件。
  * component.id 由随机数生成，有可能发生冲突，可根据自行需要换一种生成 id 的算法。
+ * @param {string} name
+ * @param {ComponentOptions?} options `{id, text, children, classes, css, attr, prop}`
+ * @returns {mjComponent}
  */
 function cc(name, options) {
     let id = `r${Math.round(Math.random() * 100000000)}`;
@@ -70,22 +79,3 @@ function cc(name, options) {
     }
     return component;
 }
-
-function span(text) {
-    return m('span').text(text);
-}
-
-function prependToList(list, items) {
-    items.forEach(item => {
-        list.elem().prepend(m(item));
-        if (item.init) item.init();
-    });
-}
-
-function appendToList(list, items) {
-    items.forEach(item => {
-        list.elem().append(m(item));
-        if (item.init) item.init();
-    });
-}
-
