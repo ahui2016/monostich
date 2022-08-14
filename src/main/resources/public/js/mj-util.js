@@ -88,7 +88,7 @@ function createLoading(align) {
  * 当 max == undefined 时，给 max 一个默认值 (比如 3)。
  * 当 max <= 0 时，不限制数量。
  */
-export function CreateAlerts(max) {
+function createAlerts(max) {
     const alerts = cc("div");
     alerts.max = max == undefined ? 3 : max;
     alerts.count = 0;
@@ -159,16 +159,50 @@ interface LinkOptions {
  * @param {LinkOptions?} options LinkOptions{text?: string, title?: string, blank?: "blank"}
  * @returns {mjElement}
  */
-function LinkElem(href, options) {
+function createLinkElem(href, options) {
     if (!options) {
         return m("a").text(href).attr("href", href);
     }
-    if (!options.text)
-        options.text = href;
+    if (!options.text) options.text = href;
     const link = m("a").text(options.text).attr("href", href);
-    if (options.title)
-        link.attr("title", options.title);
-    if (options.blank)
-        link.attr("target", "_blank");
+    if (options.title) link.attr("title", options.title);
+    if (options.blank == "blank") link.attr("target", "_blank");
     return link;
+}
+
+/**
+ * @param {string} type default = "text"
+ * @returns {mjComponent}
+ */
+function createInput(type = "text") {
+    return cc("input", { attr: { type: type } });
+}
+
+/**
+ * @param {number} rows default = 3
+ * @returns {mjComponent}
+ */
+function createTextarea(rows = 3) {
+    return cc("textarea", { classes: "form-textarea", attr: { rows: rows } });
+}
+
+/**
+ * @param {mjComponent} comp 
+ * @param {string} name 
+ * @param {string | mjElement} description 
+ * @param {string} classes default = "mb-3"
+ * @returns {mjElement}
+ */
+function createFormItem(comp, name, description, classes = "mb-3") {
+    let descElem = description;
+    if (typeof description == "string") {
+        descElem = m("div").addClass("form-text").text(description);
+    }
+    return m("div")
+        .addClass(classes)
+        .append(
+            m("label").addClass("form-label").attr({ for: comp.raw_id }).text(name),
+            m(comp).addClass("form-textinput form-textinput-fat"),
+            descElem
+        );
 }
