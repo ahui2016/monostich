@@ -187,7 +187,8 @@ function createTextarea(rows = 3) {
 }
 
 /**
- * @param {mjComponent} comp 
+ * 主要用来给 input 或 textarea 包裹一层。
+ * @param {mjComponent} comp 主是是用 createInput 或 createTextarea 函数生成的组件。
  * @param {string} name 
  * @param {string | mjElement} description 
  * @param {string} classes default = "mb-3"
@@ -206,3 +207,46 @@ function createFormItem(comp, name, description, classes = "mb-3") {
             descElem
         );
 }
+
+/**
+ * @param {string} name
+ * @returns {mjElement}
+ */
+function createBadge(name) {
+    return span(name).addClass("badge-grey");
+}
+
+/**
+ * Creates a radio button or checkbox component.
+ * @param {"radio" | "checkbox"} type 
+ * @param {string} name 
+ * @param {"checked"?} checked 
+ * @returns {mjComponent}
+ */
+function createRadioCheck(type, name, checked) {
+    const c = checked == "checked" ? true : false;
+    return cc("input", {
+        attr: { type: type, name: name },
+        prop: { checked: c },
+    });
+}
+
+/**
+ * 用一个 div 包装一下 radio button 或 checkbox.
+ * 其中 item 用 createRadioCheck 函数生成。
+ * @param {mjComponent} item is a radio button or a checkbox
+ * @param {string} label 
+ * @param {string?} title 
+ * @param {string?} value 通常等于 label, 因此不常用
+ * @returns {mjComponent}
+ */
+function createBox(item, label, title, value) {
+    value = value ? value : label;
+    return m("div")
+        .addClass("form-check-inline")
+        .append(
+            m(item).attr({value: value, title: title}),
+            m("label").text(label).attr({for: item.raw_id, title: title})
+        );
+}
+
