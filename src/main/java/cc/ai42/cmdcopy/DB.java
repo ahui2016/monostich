@@ -19,6 +19,39 @@ public class DB {
         this.jdbi = Jdbi.create("jdbc:sqlite:" + dbPath);
         this.jdbi.useHandle(h -> h.createScript(Stmt.CREATE_TABLES).execute());
         this.jdbi.registerRowMapper(ConstructorMapper.factory(Entry.class));
+        initCurrentId();
+    }
+
+    Optional<String> getCurrentId() {
+    	return jdbi.withHandle(h -> h.select(Stmt.GET_METADATA)
+    			.bind("name", Stmt.CURRENT_ID_NAME)
+    			.mapTo(String.class)
+    			.findOne());
+    }
+    
+    void updateCurrentId(String id) {
+    	jdbi.useHandle(h -> h.createUpdate(Stmt.UPDATE_METADATA)
+    			.bind("name", Stmt.CURRENT_ID_NAME)
+                .bind("value", id)
+    			.execute());
+    }
+    
+    String getNextId() {
+    	var id = getCurrentId().orElseThrow();
+    	var nextId = ShortID.parse(id).next().toString();
+    	updateCurrentId(nextId);
+    	return nextId;
+    }
+
+    void initCurrentId() {
+        if (getCurrentId().isPresent()) {
+            return;
+        }
+        var id = ShortID.first().toString();
+        jdbi.useHandle(h -> h.createUpdate(Stmt.INSERT_METADATA)
+                .bind("name", Stmt.CURRENT_ID_NAME)
+                .bind("value", id)
+                .execute());
     }
 
     void insertEntry(Entry entry) {

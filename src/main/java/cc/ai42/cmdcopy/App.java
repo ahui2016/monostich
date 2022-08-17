@@ -19,7 +19,8 @@ public class App {
         Print.ln("Database -> " + Handle.db.path());
 
         app.get("/api/hello", Handle.hello);
+        app.post("/api/add-entry", Handle.addEntry);
+        app.get("/api/all-entries", Handle.getAllEntries);
 
-        Handle.testDB();
     }
 }

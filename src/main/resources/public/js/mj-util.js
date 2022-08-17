@@ -1,3 +1,6 @@
+// 这些 class 只是为了方便生成文档，不实际使用。
+class LinkOptions {}
+class AxisoError {}
 
 // 获取地址栏的参数。
 function getUrlParam(param) {
@@ -64,7 +67,7 @@ function appendToList(list, items) {
 }
 
 /**
- * @param align 目前只接受 "center", 不接受其他值。
+ * @param {"center"?} align 目前只接受 "center", 不接受其他值。
  */
 function createLoading(align) {
     let classes = "Loading";
@@ -85,12 +88,13 @@ function createLoading(align) {
 }
 
 /**
- * 当 max == undefined 时，给 max 一个默认值 (比如 3)。
  * 当 max <= 0 时，不限制数量。
+ * msgType: "success" | "danger" | "info" | "primary"
+ * @param {number} max default = 3
  */
-function createAlerts(max) {
+function createAlerts(max = 3) {
     const alerts = cc("div");
-    alerts.max = max == undefined ? 3 : max;
+    alerts.max = max;
     alerts.count = 0;
 
     alerts.insertElem = (elem) => {
@@ -250,3 +254,17 @@ function createBox(item, label, title, value) {
         );
 }
 
+/**
+ * https://axios-http.com/docs/handling_errors
+ * @param {AxisoError} err 
+ * @returns {string}
+ */
+function axiosErrToStr(err) {
+    if (err.response) {
+        return `${err.response.status}:${JSON.stringify(err.response.data)}`;
+    }
+    if (err.request) {
+        return err.request.status + ':The request was made but no response was received.';
+    }
+    return err.message;
+}

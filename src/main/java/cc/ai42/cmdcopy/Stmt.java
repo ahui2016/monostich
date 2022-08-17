@@ -2,6 +2,12 @@ package cc.ai42.cmdcopy;
 
 public class Stmt {
     public static final String CREATE_TABLES = """
+		CREATE TABLE IF NOT EXISTS metadata
+		(
+		  name    TEXT   NOT NULL UNIQUE,
+		  value   TEXT   NOT NULL
+		);
+
         CREATE TABLE IF NOT EXISTS cmdentry
         (
           id        TEXT   PRIMARY KEY COLLATE NOCASE,
@@ -24,6 +30,20 @@ public class Stmt {
         CREATE INDEX IF NOT EXISTS idx_cmdgroup_notes ON cmdgroup(notes);
         CREATE INDEX IF NOT EXISTS idx_cmdgroup_created ON cmdgroup(created);
         """;
+
+    public static final String CURRENT_ID_NAME = "current-id";
+
+    public static final String INSERT_METADATA = """
+        INSERT INTO metadata (name, value) VALUES (:name, :value);
+        """;
+
+    public static final String GET_METADATA = """
+        SELECT value FROM metadata WHERE name = :name;
+        """;
+
+    public static final String UPDATE_METADATA = """
+		UPDATE metadata SET value=:value WHERE name=:name;
+		""";
 
     public static final String INSERT_ENTRY = """
         INSERT INTO cmdentry (id, notes, cmd, created)

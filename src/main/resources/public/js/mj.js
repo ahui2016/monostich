@@ -3,8 +3,13 @@
 // 安全提醒：使用 mjElement.append() 时，如果直接 append 字符串可以注入 html,
 // 因此要特别小心，可以考虑用 span() 来包裹字符串。
 
+// 这些 class 只是为了方便生成文档，不实际使用。
+class mjElement {}
+class mjComponent {}
+class ComponentOptions {}
+
 /**
- * 函数名 m 来源于 Mithril, 也可以理解为 make 的简称，用来创建一个元素。
+ * 函数名 m 来源于 Mithril.js, 也可以理解为 make 的简称，用来创建一个元素。
  * @param {string | mjComponent} obj
  * @returns {mjElement} mjElement 就是 `JQuery<HTMLElement>`
  */
@@ -25,7 +30,9 @@ function newComponent(name, id) {
         id: '#' + id,
         raw_id: id,
         view: m(name).attr('id', id),
-        elem: () => $('#' + id)
+        elem: () => $('#' + id),
+        hide: () => { $('#' + id).hide() },
+        show: () => { $('#' + id).show() }
     };
 }
 
