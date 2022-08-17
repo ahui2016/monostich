@@ -22,7 +22,7 @@ public class Handle {
                 data.cmd(),
                 Util.now());
         db.insertEntry(entry);
-        ctx.status(200);
+        ctx.json(entry);
     };
 
     static Handler getAllEntries = ctx -> {

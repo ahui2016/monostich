@@ -268,3 +268,26 @@ function axiosErrToStr(err) {
     }
     return err.message;
 }
+
+/**
+ * 如果 id 以数字开头，就需要使用 elemID 给它改成以字母开头，
+ * 因为 DOM 的 ID 不允许以数字开头。
+ * @param {string} id
+ * @returns {string}
+ */
+function elemID(id) {
+    return `e${id}`;
+}
+
+/**
+ * @param {string} s 
+ * @param {string} alertsID
+ */
+ function copyToClipboard(s, alertsID) {
+    navigator.clipboard.writeText(s).then(() => {
+        if (alertsID) $(alertsID).insert('success', '复制成功');
+    }, () => {
+        if (alertsID) $(alertsID).insert('danger', '复制失败');
+    });
+}
+  

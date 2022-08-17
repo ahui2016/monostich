@@ -7,6 +7,17 @@ const NaviBar = cc('div', { children: [
   ],
 });
 
+const SuccessArea = cc('div');
+
+SuccessArea.update = (entry) => {
+  SuccessArea.elem().append([
+    m('div').text(`id: ${entry.id}`),
+    m('div').text(`notes: ${entry.notes}`),
+    m('div').text(`cmd: ${entry.cmd}`),
+    m('div').text(`created: ${dayjs.unix(entry.created).format()}`),
+  ]);
+};
+
 const NotesInput = createInput();
 const CmdInput = createInput();
 const SubmitBtn = cc('button', {text: 'Submit'});
@@ -42,18 +53,20 @@ const Form = cc('form', { children: [
       cmd: cmd,
     };
     axios.post('/api/add-entry', body)
-      .then(() => {
+      .then((resp) => {
         Form.hide();
         Alerts.insert('success', '成功！');
+        SuccessArea.update(resp.data);
       })
       .catch(err => {
         Alerts.insert('danger', axiosErrToStr(err));
-      })
+      });
   }),
 ]});
 
 $('#root').append(
   m(NaviBar).addClass('my-3'),
   m(Form),
-  m(Alerts),
+  m(Alerts).addClass('my-3'),
+  m(SuccessArea),
 );

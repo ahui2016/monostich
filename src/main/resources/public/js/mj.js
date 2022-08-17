@@ -32,7 +32,8 @@ function newComponent(name, id) {
         view: m(name).attr('id', id),
         elem: () => $('#' + id),
         hide: () => { $('#' + id).hide() },
-        show: () => { $('#' + id).show() }
+        show: () => { $('#' + id).show() },
+        init: () => {}
     };
 }
 
