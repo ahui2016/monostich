@@ -40,13 +40,18 @@ textarea {
 .text-center {
   text-align: center;
 }
+
 .text-right {
   text-align: right;
 }
+
 .font-bold {
   font-weight: bold;
 }
 
+.text-large {
+  font-size: large;
+}
 
 .pl-2 {
   padding-left: 0.5rem;

@@ -32,6 +32,7 @@ public class Stmt {
         """;
 
     public static final String CURRENT_ID_NAME = "current-id";
+    public static final String APP_CONFIG_NAME = "app-config";
 
     public static final String INSERT_METADATA = """
         INSERT INTO metadata (name, value) VALUES (:name, :value);
@@ -54,11 +55,16 @@ public class Stmt {
         SELECT * FROM cmdentry WHERE id = :id;
         """;
 
-    public static final String GET_ALL_ENTRIES = """
-        SELECT * FROM cmdentry;
+    public static final String GET_RECENT_ENTRIES = """
+        SELECT * FROM cmdentry ORDER BY created DESC LIMIT :limit;
         """;
 
     public static final String DELETE_ENTRY = """
         DELETE FROM cmdentry WHERE id = :id;
+        """;
+
+    public static final String SEARCH_ENTRIES = """
+        SELECT * FROM cmdentry WHERE notes LIKE :notes
+        ORDER BY created DESC;
         """;
 }

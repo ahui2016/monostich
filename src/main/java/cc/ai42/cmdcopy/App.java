@@ -20,7 +20,7 @@ public class App {
 
         app.get("/api/hello", Handle.hello);
         app.post("/api/add-entry", Handle.addEntry);
-        app.get("/api/all-entries", Handle.getAllEntries);
-
+        app.get("/api/recent-entries", Handle.getRecentEntries);
+        app.post("/api/search", Handle.searchEntries);
     }
 }

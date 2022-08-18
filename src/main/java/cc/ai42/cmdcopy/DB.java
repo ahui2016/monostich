@@ -1,5 +1,6 @@
 package cc.ai42.cmdcopy;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 
@@ -20,6 +21,37 @@ public class DB {
         this.jdbi.useHandle(h -> h.createScript(Stmt.CREATE_TABLES).execute());
         this.jdbi.registerRowMapper(ConstructorMapper.factory(Entry.class));
         initCurrentId();
+        initAppConfig();
+    }
+
+    Optional<AppConfig> getAppConfig() {
+        var blobOpt = jdbi.withHandle(h -> h.select(Stmt.GET_METADATA)
+                .bind("name", Stmt.APP_CONFIG_NAME)
+                .mapTo(String.class)
+                .findOne());
+
+        if (blobOpt.isEmpty()) return Optional.empty();
+
+        var cfg = AppConfig.fromJSON(blobOpt.orElseThrow());
+        return Optional.of(cfg);
+    }
+
+    void updateAppConfig(AppConfig cfg) {
+        jdbi.useHandle(h -> h.createUpdate(Stmt.UPDATE_METADATA)
+                .bind("name", Stmt.APP_CONFIG_NAME)
+                .bind("value", cfg.toJSON())
+                .execute());
+    }
+
+    void initAppConfig() {
+        if (getAppConfig().isPresent()) {
+            return;
+        }
+        var cfg = AppConfig.defaultCfg();
+        jdbi.useHandle(h -> h.createUpdate(Stmt.INSERT_METADATA)
+                .bind("name", Stmt.APP_CONFIG_NAME)
+                .bind("value", cfg.toJSON())
+                .execute());
     }
 
     Optional<String> getCurrentId() {
@@ -67,8 +99,10 @@ public class DB {
                 .findOne());
     }
 
-    List<Entry> getAllEntries() {
-        return jdbi.withHandle(h -> h.select(Stmt.GET_ALL_ENTRIES)
+    List<Entry> getRecentEntries() {
+        var cfg = getAppConfig().orElseThrow();
+        return jdbi.withHandle(h -> h.select(Stmt.GET_RECENT_ENTRIES)
+                .bind("limit", cfg.maxRecent())
                 .mapTo(Entry.class)
                 .list());
     }
@@ -77,5 +111,12 @@ public class DB {
         jdbi.useHandle(h -> h.createUpdate(Stmt.DELETE_ENTRY)
                 .bind("id", id)
                 .execute());
+    }
+
+    List<Entry> searchEntries(String pattern) {
+        return jdbi.withHandle(h -> h.select(Stmt.SEARCH_ENTRIES)
+                .bind("notes", "%"+pattern+"%")
+                .mapTo(Entry.class)
+                .list());
     }
 }
