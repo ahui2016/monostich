@@ -14,3 +14,4 @@ db/cmdcopy.sqlite
 .classpath
 .project
 .settings/
+db/monostich.sqlite

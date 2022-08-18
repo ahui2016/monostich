@@ -121,16 +121,16 @@ textarea {
   color: var(--grey);
 }
 
-.CmdItem {
+.PoemItem {
   margin-bottom: 1.5rem;
 }
 
-.CmdIdTime {
+.PoemIdTime {
   font-size: small;
   color: var(--grey);
 }
 
-.CmdNotes {
+.PoemTitle {
   font-weight: bold;
 }
 

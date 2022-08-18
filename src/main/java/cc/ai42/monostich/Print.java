@@ -1,4 +1,4 @@
-package cc.ai42.cmdcopy;
+package cc.ai42.monostich;
 
 public class Print {
     public static void ln(String s) {

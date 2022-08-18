@@ -1,4 +1,4 @@
-package cc.ai42.cmdcopy;
+package cc.ai42.monostich;
 
 import java.time.LocalDate;
 

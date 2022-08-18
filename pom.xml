@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>cc.ai42</groupId>
-    <artifactId>cmdcopy</artifactId>
+    <artifactId>monostich</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -52,7 +52,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>cc.ai42.cmdcopy.App</mainClass>
+                            <mainClass>cc.ai42.monostich.App</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

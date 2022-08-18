@@ -1,24 +1,26 @@
+$('title').text('insert a poem - monostich');
+
 const Alerts = createAlerts();
 
 const NaviBar = cc('div', { children: [
-    span('cmdcopy'),
+    span('monostich'),
     span(' .. '),
-    span('Add an entry'),
+    span('Insert a poem'),
 ]});
 
 const SuccessArea = cc('div');
 
-SuccessArea.update = (entry) => {
+SuccessArea.update = (poem) => {
     SuccessArea.elem().append([
-        m('div').text(`id: ${entry.id}`),
-        m('div').text(`notes: ${entry.notes}`),
-        m('div').text(`cmd: ${entry.cmd}`),
-        m('div').text(`created: ${dayjs.unix(entry.created).format()}`),
+        m('div').text(`id: ${poem.id}`),
+        m('div').text(`title: ${poem.title}`),
+        m('div').text(`stich: ${poem.stich}`),
+        m('div').text(`created: ${dayjs.unix(poem.created).format()}`),
     ]);
 };
 
-const NotesInput = createInput();
-const CmdInput = createInput();
+const TitleInput = createInput();
+const StichInput = createInput();
 const SubmitBtn = cc('button', {text: 'Submit', classes: 'btn-fat'});
 const FormAlerts = createAlerts();
 
@@ -26,8 +28,8 @@ const FormAlerts = createAlerts();
 const HiddenBtn = cc('button', { id: 'submit', text: 'submit' });
 
 const Form = cc('form', { children: [
-    createFormItem(NotesInput, 'Notes'),
-    createFormItem(CmdInput, 'Command'),
+    createFormItem(TitleInput, 'Title'),
+    createFormItem(StichInput, 'Stich'),
     m(FormAlerts),
     m(HiddenBtn).hide().on('click', e => {
         e.preventDefault();
@@ -35,23 +37,23 @@ const Form = cc('form', { children: [
     }),
     m(SubmitBtn).on('click', event => {
         event.preventDefault();
-        const notes = valOf(NotesInput, 'trim');
-        const cmd = valOf(CmdInput, 'trim');
-        if (!notes) {
-            FormAlerts.insert('danger', 'Notes必填');
-            focus(NotesInput);
+        const title = valOf(TitleInput, 'trim');
+        const stich = valOf(StichInput, 'trim');
+        if (!title) {
+            FormAlerts.insert('danger', 'Title必填');
+            focus(TitleInput);
             return;
         }
-        if (!cmd) {
-            FormAlerts.insert('danger', 'Command必填');
-            focus(CmdInput);
+        if (!stich) {
+            FormAlerts.insert('danger', 'Stich必填');
+            focus(StichInput);
             return;
         }
         const body = {
-            notes: notes,
-            cmd: cmd,
+            title: title,
+            stich: stich,
         };
-        axios.post('/api/add-entry', body)
+        axios.post('/api/insert-poem', body)
             .then((resp) => {
                 Form.hide();
                 Alerts.insert('success', '成功！');
@@ -73,5 +75,5 @@ $('#root').append(
 init();
 
 function init() {
-    focus(NotesInput);
+    focus(TitleInput);
 }

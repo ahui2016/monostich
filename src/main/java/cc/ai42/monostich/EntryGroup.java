@@ -1,4 +1,4 @@
-package cc.ai42.cmdcopy;
+package cc.ai42.monostich;
 
 /**
  * 多条相关命令形成一个组合 (用于前端展示数据)
@@ -7,5 +7,5 @@ package cc.ai42.cmdcopy;
  * @param entries Entry
  * @param created 创建时间
  */
-public record EntryGroup(String id, String notes, Entry[] entries, long created) {
+public record EntryGroup(String id, String notes, Poem[] entries, long created) {
 }

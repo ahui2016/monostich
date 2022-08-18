@@ -1,4 +1,4 @@
-package cc.ai42.cmdcopy;
+package cc.ai42.monostich;
 
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
@@ -18,9 +18,8 @@ public class App {
 
         Print.ln("Database -> " + Handle.db.path());
 
-        app.get("/api/hello", Handle.hello);
-        app.post("/api/add-entry", Handle.addEntry);
-        app.get("/api/recent-entries", Handle.getRecentEntries);
-        app.post("/api/search", Handle.searchEntries);
+        app.post("/api/insert-poem", Handle.insertPoem);
+        app.get("/api/recent-poems", Handle.getRecentPoems);
+        app.post("/api/search", Handle.searchPoems);
     }
 }

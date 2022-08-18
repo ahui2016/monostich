@@ -1,16 +1,18 @@
+$('title').text('index - monostich');
+
 const Alerts = createAlerts();
 const Loading = createLoading();
 
 const NaviBar = cc('div', { children: [
-    span('cmdcopy'),
+    span('monostich'),
     span(' .. '),
     span('index'),
 ]});
 
-const CmdList = cc('div');
+const PoemList = cc('div');
 
-CmdList.clear = () => {
-    CmdList.elem().html('');
+PoemList.clear = () => {
+    PoemList.elem().html('');
 }
 
 const SearchInput = createInput();
@@ -28,11 +30,11 @@ const SearchForm = cc('form', { children: [
         }
         SearchAlerts.insert('primary', `正在检索: ${body.pattern}`);
         axios.post('/api/search', body).then(resp => {
-            const entries = resp.data;
-            if (entries && entries.length > 0) {
-                SearchAlerts.insert('success', `找到 ${entries.length} 条结果`);
-                CmdList.clear();
-                appendToList(CmdList, entries.map(CmdItem));
+            const poems = resp.data;
+            if (poems && poems.length > 0) {
+                SearchAlerts.insert('success', `找到 ${poems.length} 条结果`);
+                PoemList.clear();
+                appendToList(PoemList, poems.map(PoemItem));
             } else {
                 SearchAlerts.insert('info', '找不到。');
             }
@@ -46,16 +48,16 @@ $('#root').append(
     m(Loading).addClass('my-3'),
     m(SearchForm).addClass('my-3'),
     m(Alerts),
-    m(CmdList).addClass('my-3'),
+    m(PoemList).addClass('my-3'),
 );
 
 init();
 
 function init() {
-    axios.get('/api/recent-entries').then(resp => {
-        const entries = resp.data;
-        if (entries && entries.length > 0) {
-            appendToList(CmdList, entries.map(CmdItem));
+    axios.get('/api/recent-poems').then(resp => {
+        const poems = resp.data;
+        if (poems && poems.length > 0) {
+            appendToList(PoemList, poems.map(PoemItem));
         } else {
             Alerts.insert('info', '空空如也');
         }

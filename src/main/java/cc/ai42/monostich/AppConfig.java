@@ -1,4 +1,4 @@
-package cc.ai42.cmdcopy;
+package cc.ai42.monostich;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

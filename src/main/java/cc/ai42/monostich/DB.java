@@ -1,6 +1,5 @@
-package cc.ai42.cmdcopy;
+package cc.ai42.monostich;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 
@@ -19,7 +18,7 @@ public class DB {
         this.path = dbPath;
         this.jdbi = Jdbi.create("jdbc:sqlite:" + dbPath);
         this.jdbi.useHandle(h -> h.createScript(Stmt.CREATE_TABLES).execute());
-        this.jdbi.registerRowMapper(ConstructorMapper.factory(Entry.class));
+        this.jdbi.registerRowMapper(ConstructorMapper.factory(Poem.class));
         initCurrentId();
         initAppConfig();
     }
@@ -86,40 +85,40 @@ public class DB {
                 .execute());
     }
 
-    void insertEntry(Entry entry) {
-        jdbi.useHandle(h -> h.createUpdate(Stmt.INSERT_ENTRY)
-                .bindMap(entry.toMap())
+    void insertPoem(Poem poem) {
+        jdbi.useHandle(h -> h.createUpdate(Stmt.INSERT_POEM)
+                .bindMap(poem.toMap())
                 .execute());
     }
 
-    Optional<Entry> getEntry(String id) {
-        return jdbi.withHandle(h -> h.select(Stmt.GET_ENTRY)
+    Optional<Poem> getPoem(String id) {
+        return jdbi.withHandle(h -> h.select(Stmt.GET_POEM)
                 .bind("id", id)
-                .mapTo(Entry.class)
+                .mapTo(Poem.class)
                 .findOne());
     }
 
-    List<Entry> getRecentEntries() {
+    List<Poem> getRecentPoems() {
         var cfg = getAppConfig().orElseThrow();
-        return jdbi.withHandle(h -> h.select(Stmt.GET_RECENT_ENTRIES)
+        return jdbi.withHandle(h -> h.select(Stmt.GET_RECENT_POEMS)
                 .bind("limit", cfg.maxRecent())
-                .mapTo(Entry.class)
+                .mapTo(Poem.class)
                 .list());
     }
 
-    void deleteEntry(String id) {
-        jdbi.useHandle(h -> h.createUpdate(Stmt.DELETE_ENTRY)
+    void deletePoem(String id) {
+        jdbi.useHandle(h -> h.createUpdate(Stmt.DELETE_POEM)
                 .bind("id", id)
                 .execute());
     }
 
-    List<Entry> searchEntries(String pattern) {
+    List<Poem> searchPoems(String pattern) {
         if (pattern.length() == 0) {
             return List.of();
         }
-        return jdbi.withHandle(h -> h.select(Stmt.SEARCH_ENTRIES)
-                .bind("notes", "%"+pattern+"%")
-                .mapTo(Entry.class)
+        return jdbi.withHandle(h -> h.select(Stmt.SEARCH_POEMS)
+                .bind("title", "%"+pattern+"%")
+                .mapTo(Poem.class)
                 .list());
     }
 }
