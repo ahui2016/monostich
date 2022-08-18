@@ -1,3 +1,7 @@
+:root {
+  --grey: #a1a1aa;
+}
+
 hr {
   margin-top: 0;
 }
@@ -105,4 +109,22 @@ textarea {
 .text-grey,
 .form-text {
   color: var(--grey);
+}
+
+.CmdItem {
+  margin-bottom: 1.5rem;
+}
+
+.CmdIdTime {
+  font-size: small;
+  color: var(--grey);
+}
+
+.CmdNotes {
+  font-weight: bold;
+}
+
+.CopyBtn {
+  color: var(--grey);
+  font-size: small;
 }

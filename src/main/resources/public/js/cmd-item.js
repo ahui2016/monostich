@@ -2,7 +2,7 @@
  * @param {Entry} entry 
  * @returns {mjComponent}
  */
-function createCmdItem(entry) {
+function CmdItem(entry) {
   const created = dayjs.unix(entry.created);
   const createdDateTime = created.format('YYYY-MM-DD HH:mm:ss');
   const ItemAlerts = createAlerts();
@@ -16,9 +16,9 @@ function createCmdItem(entry) {
       m('div').addClass('CmdNotes').text(entry.notes),
       m('div').addClass('CmdContent').append(
         span(entry.cmd),
-        createLinkElem('#', {text: '(copy)'}).addClass('text-grey').on('click', e => {
+        createLinkElem('#', {text: '(copy)'}).addClass('CopyBtn').on('click', e => {
           e.preventDefault();
-          copyToClipboard(entry.cmd, ItemAlerts.id);
+          copyToClipboard(entry.cmd, ItemAlerts);
         })
       ),
       m(ItemAlerts),

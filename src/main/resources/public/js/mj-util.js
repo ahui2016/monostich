@@ -74,17 +74,10 @@ function createLoading(align) {
     if (align == "center") {
         classes += " text-center";
     }
-    const loading = cc("div", {
+    return cc("div", {
         text: "Loading...",
         classes: classes,
     });
-    loading.hide = () => {
-        loading.elem().hide();
-    };
-    loading.show = () => {
-        loading.elem().show();
-    };
-    return loading;
 }
 
 /**
@@ -283,11 +276,11 @@ function elemID(id) {
  * @param {string} s 
  * @param {string} alertsID
  */
- function copyToClipboard(s, alertsID) {
+ function copyToClipboard(s, alerts) {
     navigator.clipboard.writeText(s).then(() => {
-        if (alertsID) $(alertsID).insert('success', '复制成功');
+        if (alerts) alerts.insert('success', '复制成功');
     }, () => {
-        if (alertsID) $(alertsID).insert('danger', '复制失败');
+        if (alerts) alerts.insert('danger', '复制失败');
     });
 }
   
