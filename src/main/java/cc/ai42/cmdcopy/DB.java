@@ -114,6 +114,9 @@ public class DB {
     }
 
     List<Entry> searchEntries(String pattern) {
+        if (pattern.length() == 0) {
+            return List.of();
+        }
         return jdbi.withHandle(h -> h.select(Stmt.SEARCH_ENTRIES)
                 .bind("notes", "%"+pattern+"%")
                 .mapTo(Entry.class)

@@ -22,6 +22,10 @@ const SearchForm = cc('form', { children: [
     m(SubmitBtn).on('click', e => {
         e.preventDefault();
         const body = { pattern: valOf(SearchInput, 'trim') };
+        if (body.pattern == '') {
+            focus(SearchInput);
+            return;
+        }
         SearchAlerts.insert('primary', `正在检索: ${body.pattern}`);
         axios.post('/api/search', body).then(resp => {
             const entries = resp.data;
