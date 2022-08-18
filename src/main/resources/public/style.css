@@ -16,9 +16,14 @@ textarea {
   display: block;
 }
 
+.btn-fat {
+  padding: .375rem .75rem;
+  /* border-radius: .25rem; */
+}
+
 .form-textinput-fat {
-  padding-top: 0.25em;
-  padding-bottom: 0.25em;
+  line-height: 1.5;
+  padding: .375rem .75rem;
   margin-bottom: 0;
   display: block;
   width: 95%;
@@ -132,4 +137,5 @@ textarea {
 .CopyBtn {
   color: var(--grey);
   font-size: small;
+  margin-left: 0.25rem;
 }
