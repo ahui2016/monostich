@@ -1,11 +1,11 @@
-$('title').text('insert a poem - monostich');
+$('title').text('Write a new poem - monostich');
 
 const Alerts = createAlerts();
 
 const NaviBar = cc('div', { children: [
-    span('monostich'),
+    createLinkElem('/', {text: 'monostich'}),
     span(' .. '),
-    span('Insert a poem'),
+    span('Write a new poem'),
 ]});
 
 const SuccessArea = cc('div');

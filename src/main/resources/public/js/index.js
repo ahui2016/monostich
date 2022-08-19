@@ -4,9 +4,12 @@ const Alerts = createAlerts();
 const Loading = createLoading();
 
 const NaviBar = cc('div', { children: [
-    span('monostich'),
-    span(' .. '),
-    span('index'),
+    span('monostich (v0.0.1) .. '),
+    span('Index'),
+]});
+
+const NaviLinks = cc('div', { children: [
+    createLinkElem('/new-poem.html', {text: 'New'})
 ]});
 
 const PoemList = cc('div');
@@ -45,6 +48,7 @@ const SearchForm = cc('form', { children: [
 
 $('#root').append(
     m(NaviBar).addClass('text-large'),
+    m(NaviLinks).addClass('text-right mr-5'),
     m(Loading).addClass('my-3'),
     m(SearchForm).addClass('my-3'),
     m(Alerts),
