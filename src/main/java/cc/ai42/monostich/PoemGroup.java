@@ -15,16 +15,16 @@ import java.util.Map;
  * @param id      RandomID
  * @param title   标题（说明/备注）
  * @param poems   一个或多个 Poem 的 id
- * @param created 创建时间
+ * @param updated 更新时间（用于排序）
  */
-public record PoemGroup(String id, String title, String[] poems, long created) {
+public record PoemGroup(String id, String title, String[] poems, long updated) {
     Map<String, Object> toMap() {
         try {
             return Map.of(
                     "id", id,
                     "title", title,
                     "poems", new ObjectMapper().writeValueAsBytes(poems),
-                    "created", created
+                    "updated", updated
             );
         } catch (JsonProcessingException e) {
             throw new RuntimeException("StichGroup.toMap: " + e + id + title);
@@ -44,7 +44,7 @@ class PoemGroupMapper implements RowMapper<PoemGroup> {
         } catch (IOException e) {
             throw new RuntimeException("PoemGroupMapper.map: " + e + id + title);
         }
-        var created = rs.getLong("created");
-        return new PoemGroup(id, title, poems, created);
+        var updated = rs.getLong("updated");
+        return new PoemGroup(id, title, poems, updated);
     }
 }

@@ -24,11 +24,11 @@ public class Stmt {
           id        TEXT   PRIMARY KEY COLLATE NOCASE,
           title     TEXT   NOT NULL,
           poems     BLOB   NOT NULL,
-          created   INT    NOT NULL
+          updated   INT    NOT NULL
         );
 
         CREATE INDEX IF NOT EXISTS idx_poemgroup_title ON poemgroup(title);
-        CREATE INDEX IF NOT EXISTS idx_poemgroup_created ON poemgroup(created);
+        CREATE INDEX IF NOT EXISTS idx_poemgroup_created ON poemgroup(updated);
         """;
 
     public static final String CURRENT_ID_NAME = "current-id";

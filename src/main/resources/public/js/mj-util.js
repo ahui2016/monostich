@@ -1,6 +1,6 @@
 // 这些 class 只是为了方便生成文档，不实际使用。
 class LinkOptions {}
-class AxisoError {}
+class AxiosError {}
 
 // 获取地址栏的参数。
 function getUrlParam(param) {
@@ -249,7 +249,7 @@ function createBox(item, label, title, value) {
 
 /**
  * https://axios-http.com/docs/handling_errors
- * @param {AxisoError} err 
+ * @param {AxiosError} err 
  * @returns {string}
  */
 function axiosErrToStr(err) {
