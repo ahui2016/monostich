@@ -1,35 +1,36 @@
-$('title').text('Write a new poem - monostich');
+$('title').text('Edit poem - monostich');
+
+const poemID = getUrlParam('id');
 
 const Alerts = createAlerts();
 
 const NaviBar = cc('div', { children: [
     createLinkElem('/', {text: 'monostich'}),
     span(' .. '),
-    span('Write a new poem'),
+    span('Edit poem'),
 ]});
 
-const SuccessArea = cc('div');
+const DelBtn = createLinkElem('#', { text: 'Delete' });
 
-SuccessArea.update = (poem) => {
-    SuccessArea.elem().append([
-        m('div').text(`id: ${poem.id}`),
-        m('div').text(`title: ${poem.title}`),
-        m('div').text(`stich: ${poem.stich}`),
-        m('div').text(`created: ${dayjs.unix(poem.created).format()}`),
-    ]);
-};
+const NaviLinks = cc('div', { children: [
+    m(DelBtn),
+]});
 
+const IdInput = createInput();
 const TitleInput = createInput();
 const StichInput = createInput();
-const SubmitBtn = cc('button', {text: 'Submit', classes: 'btn btn-fat'});
+const CreatedInput = createInput();
+const SubmitBtn = cc('button', {text: 'Update', classes: 'btn btn-fat'});
 const FormAlerts = createAlerts();
 
 // 这个按钮是隐藏不用的，为了防止按回车键提交表单
 const HiddenBtn = cc('button', { id: 'submit', text: 'submit' });
 
 const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
+    createFormItem(IdInput, "ID"),
     createFormItem(TitleInput, 'Title', '标题（说明/备注）'),
     createFormItem(StichInput, 'Stich', '一句话（例如一条命令、一个网址、一句备忘等等）'),
+    createFormItem(CreatedInput, 'Created', '创建日期'),
     m(FormAlerts),
     m(HiddenBtn).hide().on('click', e => {
         e.preventDefault();
@@ -53,8 +54,8 @@ const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
             title: title,
             stich: stich,
         };
-        axios.post('/api/insert-poem', body)
-            .then((resp) => {
+        axios.post('/api/update-poem', body)
+            .then(resp => {
                 Form.hide();
                 Alerts.insert('success', '成功！');
                 SuccessArea.update(resp.data);
@@ -65,15 +66,33 @@ const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
     }),
 ]});
 
+Form.init = () => {
+    axios.post('/api/get-poem', {id: poemID})
+        .then(resp => {
+            Form.show();
+            const poem = resp.data;
+            IdInput.elem().val(poem.id);
+            disable(IdInput);
+            TitleInput.elem().val(poem.title);
+            StichInput.elem().val(poem.stich);
+            const created = dayjs.unix(poem.created);
+            CreatedInput.elem().val(created.format(DATE_TIME_FORMAT));
+            disable(CreatedInput);
+        })
+        .catch(err => {
+            Alerts.insert('danger', axiosErrToStr(err));
+        });
+};
+
 $('#root').append(
     m(NaviBar).addClass('my-3'),
-    m(Form),
+    m(NaviLinks),
+    m(Form).hide(),
     m(Alerts).addClass('my-3'),
-    m(SuccessArea),
 );
     
 init();
 
 function init() {
-    focus(TitleInput);
+    Form.init();
 }

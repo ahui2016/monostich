@@ -1,6 +1,7 @@
 package cc.ai42.monostich;
 
 import io.javalin.http.Handler;
+import io.javalin.http.NotFoundResponse;
 
 import java.time.Instant;
 
@@ -19,6 +20,16 @@ public class Handle {
         ctx.json(poem);
     };
 
+    static Handler getPoem = ctx -> {
+        var form = ctx.bodyAsClass(IdForm.class);
+        var poem = db.getPoem(form.id());
+        if (poem.isEmpty()) {
+            throw new NotFoundResponse("Not Found id: " + form.id());
+        } else {
+            ctx.json(poem.orElseThrow());
+        }
+    };
+
     static Handler getRecentPoems = ctx -> {
         var poems = db.getRecentPoems();
         ctx.json(poems);
@@ -34,6 +45,8 @@ public class Handle {
 record PoemForm(String title, String stich) {}
 
 record SearchForm(String pattern) {}
+
+record IdForm(String id) {}
 
 class Util {
     static long now() {

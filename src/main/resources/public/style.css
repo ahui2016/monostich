@@ -23,7 +23,7 @@ textarea {
 
 .form-textinput-fat {
   line-height: 1.5;
-  padding: .375rem .75rem;
+  padding: .375rem .25rem;
   margin-bottom: 0;
   display: block;
   width: 95%;
@@ -137,8 +137,9 @@ textarea {
   font-weight: bold;
 }
 
+.EditBtn,
 .CopyBtn {
   color: var(--grey);
   font-size: small;
-  margin-left: 0.25rem;
+  margin-left: 0.5rem;
 }

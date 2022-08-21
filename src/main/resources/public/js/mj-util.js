@@ -2,6 +2,8 @@
 class LinkOptions {}
 class AxiosError {}
 
+const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+
 // 获取地址栏的参数。
 function getUrlParam(param) {
   const queryString = new URLSearchParams(document.location.search);

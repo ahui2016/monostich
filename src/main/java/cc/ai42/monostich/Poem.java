@@ -15,7 +15,7 @@ public record Poem(String id, String title, String stich, long created) {
                 "id", id,
                 "title", title,
                 "stich", stich,
-                "updated", created
+                "created", created
         );
     }
 }
