@@ -20,6 +20,22 @@ public class Handle {
         ctx.json(poem);
     };
 
+    static Handler updatePoem = ctx -> {
+        var poem = ctx.bodyAsClass(Poem.class);
+        db.updatePoem(poem);
+        ctx.status(200);
+    };
+
+    static Handler deletePoem = ctx -> {
+        var form = ctx.bodyAsClass(IdForm.class);
+        var poem = db.getPoem(form.id());
+        if (poem.isEmpty()) {
+            throw new NotFoundResponse("Not Found id: " + form.id());
+        } else {
+            db.deletePoem(form.id());
+        }
+    };
+
     static Handler getPoem = ctx -> {
         var form = ctx.bodyAsClass(IdForm.class);
         var poem = db.getPoem(form.id());

@@ -91,6 +91,12 @@ public class DB {
                 .execute());
     }
 
+    void updatePoem(Poem poem) {
+        jdbi.useHandle(h -> h.createUpdate(Stmt.UPDATE_POEM)
+                .bindMap(poem.toMap())
+                .execute());
+    }
+
     Optional<Poem> getPoem(String id) {
         return jdbi.withHandle(h -> h.select(Stmt.GET_POEM)
                 .bind("id", id)

@@ -23,6 +23,8 @@ public class App {
         Print.ln("Database -> " + Handle.db.path());
 
         app.post("/api/insert-poem", Handle.insertPoem);
+        app.post("/api/update-poem", Handle.updatePoem);
+        app.post("/api/delete-poem", Handle.deletePoem);
         app.post("/api/get-poem", Handle.getPoem);
         app.get("/api/recent-poems", Handle.getRecentPoems);
         app.post("/api/search", Handle.searchPoems);

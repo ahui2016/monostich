@@ -51,6 +51,10 @@ public class Stmt {
         VALUES (:id, :title, :stich, :created);
         """;
 
+    public static final String UPDATE_POEM = """
+        UPDATE poem SET title=:title, stich=:stich WHERE id=:id;
+        """;
+
     public static final String GET_POEM = """
         SELECT * FROM poem WHERE id = :id;
         """;
