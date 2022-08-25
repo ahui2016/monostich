@@ -124,6 +124,10 @@ textarea {
   color: var(--grey);
 }
 
+.NaviLinks a {
+  margin-left: 0.75rem;
+}
+
 .PoemItem {
   margin-bottom: 1.5rem;
 }

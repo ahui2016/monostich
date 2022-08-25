@@ -112,6 +112,14 @@ public class DB {
                 .list());
     }
 
+    List<PoemGroup> getRecentGroups() {
+        var cfg = getAppConfig().orElseThrow();
+        return jdbi.withHandle(h -> h.select(Stmt.GET_RECENT_GROUPS)
+                .bind("limit", cfg.maxRecent())
+                .mapTo(PoemGroup.class)
+                .list());
+    }
+
     void deletePoem(String id) {
         jdbi.useHandle(h -> h.createUpdate(Stmt.DELETE_POEM)
                 .bind("id", id)

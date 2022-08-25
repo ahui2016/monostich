@@ -285,4 +285,39 @@ function elemID(id) {
         if (alerts) alerts.insert('danger', '复制失败');
     });
 }
+
+/**
+ * @param {string} items 
+ * @returns {string}
+ */
+function items_replace(items) {
+    if (!items) return '';
+    return items.replace(/[#;,，'"\/\+\n]/g, ' ').trim();
+}
+
+/**
+ * @param {string} items 
+ * @returns {string[]}
+ */
+function itemsStringToArray(items) {
+    return Array.from(itemsStringToSet(items));
+}
+
+/**
+ * @param {string[]} arr 
+ * @param {string} s 
+ * @returns number
+ */
+function noCaseIndexOf(arr, s) {
+    return arr.findIndex(x => x.toLowerCase() === s.toLowerCase());
+}
   
+/**
+ * @param {string[]} items 
+ * @returns {string[]}
+ */
+function uniqueKeepOrder(items) {
+    return items
+        .filter(x => !!x)
+        .filter((v, i, a) => noCaseIndexOf(a, v) === i);
+}

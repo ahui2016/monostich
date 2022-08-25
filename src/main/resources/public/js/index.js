@@ -8,8 +8,9 @@ const NaviBar = cc('div', { children: [
     span('Index'),
 ]});
 
-const NaviLinks = cc('div', { children: [
-    createLinkElem('/new-poem.html', {text: 'New'})
+const NaviLinks = cc('div', {classes: 'NaviLinks', children: [
+    createLinkElem('/new-poem.html', {text: 'New'}),
+    createLinkElem('/new-group.html', {text: 'NewGroup'}),
 ]});
 
 const PoemList = cc('div');

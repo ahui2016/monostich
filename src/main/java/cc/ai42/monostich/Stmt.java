@@ -2,11 +2,11 @@ package cc.ai42.monostich;
 
 public class Stmt {
     public static final String CREATE_TABLES = """
-		CREATE TABLE IF NOT EXISTS metadata
-		(
-		  name    TEXT   NOT NULL UNIQUE,
-		  value   TEXT   NOT NULL
-		);
+        CREATE TABLE IF NOT EXISTS metadata
+        (
+          name    TEXT   NOT NULL UNIQUE,
+          value   TEXT   NOT NULL
+        );
 
         CREATE TABLE IF NOT EXISTS poem
         (
@@ -28,7 +28,7 @@ public class Stmt {
         );
 
         CREATE INDEX IF NOT EXISTS idx_poemgroup_title ON poemgroup(title);
-        CREATE INDEX IF NOT EXISTS idx_poemgroup_created ON poemgroup(updated);
+        CREATE INDEX IF NOT EXISTS idx_poemgroup_updated ON poemgroup(updated);
         """;
 
     public static final String CURRENT_ID_NAME = "current-id";
@@ -51,6 +51,11 @@ public class Stmt {
         VALUES (:id, :title, :stich, :created);
         """;
 
+    public static final String INSERT_GROUP = """
+        INSERT INTO poemgroup (id, title, poems, updated)
+        VALUES (:id, :title, :poems, :updated);
+        """;
+
     public static final String UPDATE_POEM = """
         UPDATE poem SET title=:title, stich=:stich WHERE id=:id;
         """;
@@ -61,6 +66,10 @@ public class Stmt {
 
     public static final String GET_RECENT_POEMS = """
         SELECT * FROM poem ORDER BY created DESC LIMIT :limit;
+        """;
+
+    public static final String GET_RECENT_GROUPS = """
+        SELECT * FROM poemgroup ORDER BY updated DESC LIMIT :limit;
         """;
 
     public static final String DELETE_POEM = """
