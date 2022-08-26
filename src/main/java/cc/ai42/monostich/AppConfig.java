@@ -6,10 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
 public record AppConfig(
-        int maxRecent // 最近项目列表条数上限
+        int maxRecent, // 最近项目列表条数上限
+        boolean showRecentSearch // 是否展示最近搜索
 ) {
     public static AppConfig defaultCfg() {
-        return new AppConfig(25);
+        return new AppConfig(25, true);
     }
 
     public static AppConfig fromJSON(String blob) {

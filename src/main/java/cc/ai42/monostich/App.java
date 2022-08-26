@@ -35,6 +35,7 @@ public class App {
         app.post("/api/get-poems-by-group", Handle.getPoemsByGroup);
         app.get("/api/recent-poems", Handle.getRecentPoems);
         app.get("/api/recent-groups", Handle.getRecentGroups);
-        app.post("/api/search", Handle.searchPoems);
+        app.post("/api/search-poems", Handle.searchPoems);
+        app.post("/api/search-groups", Handle.searchGroups);
     }
 }

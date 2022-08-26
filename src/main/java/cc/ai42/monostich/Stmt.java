@@ -93,4 +93,9 @@ public class Stmt {
         SELECT * FROM poem WHERE title LIKE :title
         ORDER BY created DESC;
         """;
+
+    public static final String SEARCH_GROUPS = """
+        SELECT * FROM poemgroup WHERE title LIKE :title
+        ORDER BY updated DESC;
+        """;
 }

@@ -41,16 +41,32 @@ const SearchForm = cc('form', { children: [
             return;
         }
         SearchAlerts.insert('primary', `正在检索: ${body.pattern}`);
-        axios.post('/api/search', body).then(resp => {
-            const poems = resp.data;
-            if (poems && poems.length > 0) {
-                SearchAlerts.insert('success', `找到 ${poems.length} 条结果`);
-                PoemList.clear();
-                appendToList(PoemList, poems.map(PoemItem));
-            } else {
-                SearchAlerts.insert('info', '找不到。');
-            }
-        });
+        PoemList.clear();
+        PoemGroupList.clear();
+        axios.post('/api/search-poems', body)
+            .then(resp => {
+                const poems = resp.data;
+                if (poems && poems.length > 0) {
+                    SearchAlerts.insert('success', `找到 ${poems.length} 句话。`);
+                    appendToList(PoemList, poems.map(PoemItem));
+                } else {
+                    SearchAlerts.insert('primary', '找不到句子。');
+                }
+            })
+            .catch(err => {
+                SearchAlerts.insert('danger', axiosErrToStr(err));
+            });
+        axios.post('/api/search-groups', body)
+            .then(resp => {
+                const groups = resp.data;
+                if (groups && groups.length > 0) {
+                    SearchAlerts.insert('success', `找到 ${groups.length} 个组合。`);
+                    appendToList(PoemGroupList, groups.map(PoemGroupItem));
+                }
+            })
+            .catch(err => {
+                SearchAlerts.insert('danger', axiosErrToStr(err));
+            });
     }),
     m(SearchAlerts),
 ]});

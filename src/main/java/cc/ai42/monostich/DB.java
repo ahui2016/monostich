@@ -1,6 +1,5 @@
 package cc.ai42.monostich;
 
-import io.javalin.http.NotFoundResponse;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 
@@ -177,6 +176,16 @@ public class DB {
         return jdbi.withHandle(h -> h.select(Stmt.SEARCH_POEMS)
                 .bind("title", "%"+pattern+"%")
                 .mapTo(Poem.class)
+                .list());
+    }
+
+    List<PoemGroup> searchGroups(String pattern) {
+        if (pattern.length() == 0) {
+            return List.of();
+        }
+        return jdbi.withHandle(h -> h.select(Stmt.SEARCH_GROUPS)
+                .bind("title", "%"+pattern+"%")
+                .map(new PoemGroupMapper())
                 .list());
     }
 }

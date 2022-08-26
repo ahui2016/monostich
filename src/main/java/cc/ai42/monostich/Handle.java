@@ -118,6 +118,12 @@ public class Handle {
         var poems = db.searchPoems(form.pattern());
         ctx.json(poems);
     };
+
+    static Handler searchGroups = ctx -> {
+        var form = ctx.bodyAsClass(SearchForm.class);
+        var groups = db.searchGroups(form.pattern());
+        ctx.json(groups);
+    };
 }
 
 record PoemForm(String title, String stich) {}
