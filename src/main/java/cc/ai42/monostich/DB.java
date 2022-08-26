@@ -1,8 +1,10 @@
 package cc.ai42.monostich;
 
+import io.javalin.http.NotFoundResponse;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,6 +93,12 @@ public class DB {
                 .execute());
     }
 
+    void insertPoemGroup(PoemGroup poemGroup) {
+        jdbi.useHandle(h -> h.createUpdate(Stmt.INSERT_GROUP)
+                .bindMap(poemGroup.toMap())
+                .execute());
+    }
+
     void updatePoem(Poem poem) {
         jdbi.useHandle(h -> h.createUpdate(Stmt.UPDATE_POEM)
                 .bindMap(poem.toMap())
@@ -102,6 +110,26 @@ public class DB {
                 .bind("id", id)
                 .mapTo(Poem.class)
                 .findOne());
+    }
+
+    Optional<PoemGroup> getPoemGroup(String id) {
+        return jdbi.withHandle(h -> h.select(Stmt.GET_POEMGROUP)
+                .bind("id", id)
+                .map(new PoemGroupMapper())
+                .findOne());
+    }
+
+    List<Poem> getPoemsByGroupId(String id) {
+        var poemGroup = getPoemGroup(id).orElseThrow();
+        var poems = new ArrayList<Poem>();
+        for (var poemID: poemGroup.poems()) {
+            var poem = jdbi.withHandle(h -> h.select(Stmt.GET_POEM)
+                    .bind("id", poemID)
+                    .mapTo(Poem.class)
+                    .findOne());
+            poems.add(poem.orElseThrow());
+        }
+        return poems;
     }
 
     List<Poem> getRecentPoems() {
@@ -116,7 +144,7 @@ public class DB {
         var cfg = getAppConfig().orElseThrow();
         return jdbi.withHandle(h -> h.select(Stmt.GET_RECENT_GROUPS)
                 .bind("limit", cfg.maxRecent())
-                .mapTo(PoemGroup.class)
+                .map(new PoemGroupMapper())
                 .list());
     }
 

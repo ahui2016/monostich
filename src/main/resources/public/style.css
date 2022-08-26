@@ -128,6 +128,7 @@ textarea {
   margin-left: 0.75rem;
 }
 
+.PoemGroupItem,
 .PoemItem {
   margin-bottom: 1.5rem;
 }
@@ -137,6 +138,7 @@ textarea {
   color: var(--grey);
 }
 
+.GroupTitle,
 .PoemTitle {
   font-weight: bold;
 }
@@ -151,4 +153,9 @@ textarea {
 .DelBtn {
   color: black;
   margin-left: 1rem;
+}
+
+.GroupPoems {
+  margin-top: 0;
+  margin-bottom: 0;
 }

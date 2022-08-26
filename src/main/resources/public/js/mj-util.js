@@ -300,7 +300,8 @@ function items_replace(items) {
  * @returns {string[]}
  */
 function itemsStringToArray(items) {
-    return Array.from(itemsStringToSet(items));
+    items = items_replace(items);
+    return items.split(/ +/).filter(x => !!x);
 }
 
 /**

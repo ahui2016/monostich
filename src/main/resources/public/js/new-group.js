@@ -15,7 +15,7 @@ SuccessArea.update = (group) => {
         m('div').text(`id: ${group.id}`),
         m('div').text(`title: ${group.title}`),
         m('div').text(`stich: ${group.poems.join(', ')}`),
-        m('div').text(`updated: ${dayjs.unix(group.created).format()}`),
+        m('div').text(`updated: ${dayjs.unix(group.updated).format()}`),
     ]);
 };
 
@@ -39,8 +39,7 @@ const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
         event.preventDefault();
         const title = valOf(TitleInput, 'trim');
         const poemsStr = valOf(PoemsInput, 'trim');
-        const poems = itemsStringToArray(poemsStr);
-        poems = uniqueKeepOrder(poems);
+        const poems = itemsStringToArray(poemsStr).map(s => s.toUpperCase());
 
         if (!title) {
             FormAlerts.insert('danger', 'Title必填');

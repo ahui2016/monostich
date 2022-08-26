@@ -19,6 +19,12 @@ PoemList.clear = () => {
     PoemList.elem().html('');
 }
 
+const PoemGroupList = cc('div');
+
+PoemGroupList.clear = () => {
+    PoemGroupList.elem().html('');
+}
+
 const SearchInput = createInput();
 const SubmitBtn = cc('button', {text: 'search'});
 const SearchAlerts = createAlerts(4);
@@ -50,21 +56,45 @@ const SearchForm = cc('form', { children: [
 $('#root').append(
     m(NaviBar).addClass('text-large'),
     m(NaviLinks).addClass('text-right mr-5'),
-    m(Loading).addClass('my-3'),
+    m(Loading).addClass('my-3').hide(),
     m(SearchForm).addClass('my-3'),
     m(Alerts),
     m(PoemList).addClass('my-3'),
+    m(PoemGroupList).addClass('my-3'),
 );
 
 init();
 
 function init() {
+    getRecentPoems();
+    getRecentGroups();
+}
+
+function getRecentPoems() {
+    Loading.show();
     axios.get('/api/recent-poems').then(resp => {
         const poems = resp.data;
         if (poems && poems.length > 0) {
             appendToList(PoemList, poems.map(PoemItem));
         } else {
             Alerts.insert('info', '空空如也');
+        }
+    })
+    .catch(err => {
+        Alerts.insert('danger', axiosErrToStr(err));
+    })
+    .then(() => {
+        Loading.hide();
+        focus(SearchInput);
+    });
+}
+
+function getRecentGroups() {
+    Loading.show();
+    axios.get('/api/recent-groups').then(resp => {
+        const groups = resp.data;
+        if (groups && groups.length > 0) {
+            appendToList(PoemGroupList, groups.map(PoemGroupItem));
         }
     })
     .catch(err => {

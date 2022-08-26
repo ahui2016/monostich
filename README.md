@@ -21,3 +21,7 @@ Caused by: org.jdbi.v3.core.ConnectionException: java.sql.SQLException: path to 
 
 - 默认前缀检索，可选包含检索。
 
+### 设计
+
+- 标题允许重复
+- group 里的项目 ID 允许重复

@@ -64,6 +64,10 @@ public class Stmt {
         SELECT * FROM poem WHERE id = :id;
         """;
 
+    public static final String GET_POEMGROUP = """
+        SELECT * FROM poemgroup WHERE id = :id;
+        """;
+
     public static final String GET_RECENT_POEMS = """
         SELECT * FROM poem ORDER BY created DESC LIMIT :limit;
         """;
