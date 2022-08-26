@@ -9,7 +9,7 @@ public record AppConfig(
         int maxRecent // 最近项目列表条数上限
 ) {
     public static AppConfig defaultCfg() {
-        return new AppConfig(50);
+        return new AppConfig(25);
     }
 
     public static AppConfig fromJSON(String blob) {

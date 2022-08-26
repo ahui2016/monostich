@@ -30,7 +30,7 @@ const HiddenBtn = cc('button', { id: 'submit', text: 'submit' });
 const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
     createFormItem(TitleInput, 'Title', '标题（说明/备注）'),
     createFormItem(StichInput, 'Stich', '一句话（例如一条命令、一个网址、一句备忘等等）'),
-    m(FormAlerts),
+    m(FormAlerts).addClass('mb-3'),
     m(HiddenBtn).hide().on('click', e => {
         e.preventDefault();
         return false;
@@ -67,8 +67,8 @@ const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
 
 $('#root').append(
     m(NaviBar).addClass('my-3'),
-    m(Form),
     m(Alerts).addClass('my-3'),
+    m(Form),
     m(SuccessArea),
 );
     

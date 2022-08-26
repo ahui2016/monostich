@@ -51,8 +51,7 @@ const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
         poem.stich = stich;
         axios.post('/api/update-poem', poem)
             .then(resp => {
-                Form.hide();
-                Alerts.insert('success', '成功！');
+                Alerts.insert('success', '更新成功！');
                 SuccessArea.update(resp.data);
             })
             .catch(err => {

@@ -30,7 +30,7 @@ const HiddenBtn = cc('button', { id: 'submit', text: 'submit' });
 const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
     createFormItem(TitleInput, 'Title', '标题（说明/备注）'),
     createFormItem(PoemsInput, 'Poems', '一个或多个 Poem 的 ID 列表，用逗号或空格隔开'),
-    m(FormAlerts),
+    m(FormAlerts).addClass('mb-3'),
     m(HiddenBtn).hide().on('click', e => {
         e.preventDefault();
         return false;
@@ -69,8 +69,8 @@ const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
 
 $('#root').append(
     m(NaviBar).addClass('my-3'),
-    m(Form),
     m(Alerts).addClass('my-3'),
+    m(Form),
     m(SuccessArea),
 );
     

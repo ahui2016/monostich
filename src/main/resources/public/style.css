@@ -70,6 +70,9 @@ textarea {
 .ml-3 {
   margin-left: 1rem;
 }
+.mr-1 {
+  margin-right: 0.25rem;
+}
 .mr-5 {
   margin-right: 3rem;
 }

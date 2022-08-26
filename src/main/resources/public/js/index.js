@@ -8,22 +8,24 @@ const NaviBar = cc('div', { children: [
     span('Index'),
 ]});
 
-const NaviLinks = cc('div', {classes: 'NaviLinks', children: [
-    createLinkElem('/new-poem.html', {text: 'New'}),
-    createLinkElem('/new-group.html', {text: 'NewGroup'}),
-]});
-
 const PoemList = cc('div');
 
 PoemList.clear = () => {
     PoemList.elem().html('');
 }
 
-const PoemGroupList = cc('div');
+const PoemGroupList = cc('div', {id: 'PoemGroupList'});
 
 PoemGroupList.clear = () => {
     PoemGroupList.elem().html('');
 }
+
+const NaviLinks = cc('div', {classes: 'NaviLinks', children: [
+    createLinkElem('/new-poem.html', {text: 'New'}),
+    createLinkElem('/new-group.html', {text: 'NewGroup'}),
+    createLinkElem(PoemGroupList.id, {text: 'Groups'}),
+    createLinkElem('/config.html', {text: 'Config'}),
+]});
 
 const SearchInput = createInput();
 const SubmitBtn = cc('button', {text: 'search'});
@@ -55,7 +57,7 @@ const SearchForm = cc('form', { children: [
 
 $('#root').append(
     m(NaviBar).addClass('text-large'),
-    m(NaviLinks).addClass('text-right mr-5'),
+    m(NaviLinks).addClass('text-right mr-1'),
     m(Loading).addClass('my-3').hide(),
     m(SearchForm).addClass('my-3'),
     m(Alerts),

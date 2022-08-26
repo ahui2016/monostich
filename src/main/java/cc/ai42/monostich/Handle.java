@@ -9,6 +9,16 @@ public class Handle {
 
     static DB db = new DB("db/monostich.sqlite");
 
+    static Handler getAppConfig = ctx -> {
+        var cfg = db.getAppConfig().orElseThrow();
+        ctx.json(cfg);
+    };
+
+    static Handler updateConfig = ctx -> {
+        var cfg = ctx.bodyAsClass(AppConfig.class);
+        db.updateAppConfig(cfg);
+    };
+
     static Handler insertPoem = ctx -> {
         var form = ctx.bodyAsClass(PoemForm.class);
         var poem = new Poem(
@@ -43,14 +53,12 @@ public class Handle {
     static Handler updatePoem = ctx -> {
         var poem = ctx.bodyAsClass(Poem.class);
         db.updatePoem(poem);
-        ctx.status(200);
     };
 
     static Handler updatePoemGroup = ctx -> {
         var poemGroup = ctx.bodyAsClass(PoemGroup.class);
         checkAllPoemsExist(poemGroup.poems());
         db.updatePoemGroup(poemGroup);
-        ctx.status(200);
     };
 
     static Handler deletePoem = ctx -> {

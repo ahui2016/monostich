@@ -25,3 +25,8 @@ Caused by: org.jdbi.v3.core.ConnectionException: java.sql.SQLException: path to 
 
 - 标题允许重复
 - group 里的项目 ID 允许重复
+
+### 夸 Java
+
+- 用 Javalin 和 jdbi, 学习量非常少，分别只有一页内容
+- 不用 Spring 和 bean

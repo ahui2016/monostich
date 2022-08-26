@@ -54,8 +54,7 @@ const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
         group.updated = dayjs().unix();
         axios.post('/api/update-group', group)
             .then(resp => {
-                Form.hide();
-                Alerts.insert('success', '成功！');
+                Alerts.insert('success', '更新成功！');
                 SuccessArea.update(resp.data);
             })
             .catch(err => {

@@ -22,6 +22,8 @@ public class App {
 
         Print.ln("Database -> " + Handle.db.path());
 
+        app.get("/api/get-config", Handle.getAppConfig);
+        app.post("/api/update-config", Handle.updateConfig);
         app.post("/api/insert-poem", Handle.insertPoem);
         app.post("/api/insert-group", Handle.insertPoemGroup);
         app.post("/api/update-poem", Handle.updatePoem);
