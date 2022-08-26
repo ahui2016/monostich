@@ -46,6 +46,13 @@ public class Handle {
         ctx.status(200);
     };
 
+    static Handler updatePoemGroup = ctx -> {
+        var poemGroup = ctx.bodyAsClass(PoemGroup.class);
+        checkAllPoemsExist(poemGroup.poems());
+        db.updatePoemGroup(poemGroup);
+        ctx.status(200);
+    };
+
     static Handler deletePoem = ctx -> {
         var form = ctx.bodyAsClass(IdForm.class);
         var poem = db.getPoem(form.id());
@@ -55,10 +62,31 @@ public class Handle {
         db.deletePoem(form.id());
     };
 
+    static Handler deletePoemGroup = ctx -> {
+        var form = ctx.bodyAsClass(IdForm.class);
+        var poemGroup = db.getPoemGroup(form.id());
+        if (poemGroup.isEmpty()) {
+            throw new NotFoundResponse("Not Found id: " + form.id());
+        }
+        db.deletePoemGroup(form.id());
+    };
+
     static Handler getPoem = ctx -> {
         var form = ctx.bodyAsClass(IdForm.class);
-        var poem = db.getPoem(form.id()).orElseThrow();
-        ctx.json(poem);
+        var poem = db.getPoem(form.id());
+        if (poem.isEmpty()) {
+            throw new NotFoundResponse("Not Found id: " + form.id());
+        }
+        ctx.json(poem.orElseThrow());
+    };
+
+    static Handler getPoemGroup = ctx -> {
+        var form = ctx.bodyAsClass(IdForm.class);
+        var poemGroup = db.getPoemGroup(form.id());
+        if (poemGroup.isEmpty()) {
+            throw new NotFoundResponse("Not Found id: " + form.id());
+        }
+        ctx.json(poemGroup.orElseThrow());
     };
 
     static Handler getPoemsByGroup = ctx -> {

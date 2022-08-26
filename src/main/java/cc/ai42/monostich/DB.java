@@ -105,6 +105,12 @@ public class DB {
                 .execute());
     }
 
+    void updatePoemGroup(PoemGroup poemGroup) {
+        jdbi.useHandle(h -> h.createUpdate(Stmt.UPDATE_POEMGROUP)
+                .bindMap(poemGroup.toMap())
+                .execute());
+    }
+
     Optional<Poem> getPoem(String id) {
         return jdbi.withHandle(h -> h.select(Stmt.GET_POEM)
                 .bind("id", id)
@@ -127,7 +133,11 @@ public class DB {
                     .bind("id", poemID)
                     .mapTo(Poem.class)
                     .findOne());
-            poems.add(poem.orElseThrow());
+            if (poem.isEmpty()) {
+                poems.add(new Poem(poemID, poemID, poemID, 0));
+            } else {
+                poems.add(poem.orElseThrow());
+            }
         }
         return poems;
     }
@@ -150,6 +160,12 @@ public class DB {
 
     void deletePoem(String id) {
         jdbi.useHandle(h -> h.createUpdate(Stmt.DELETE_POEM)
+                .bind("id", id)
+                .execute());
+    }
+
+    void deletePoemGroup(String id) {
+        jdbi.useHandle(h -> h.createUpdate(Stmt.DELETE_POEMGROUP)
                 .bind("id", id)
                 .execute());
     }

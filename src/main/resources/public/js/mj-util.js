@@ -3,6 +3,7 @@ class LinkOptions {}
 class AxiosError {}
 
 const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+const GROUP_POEMS_LENGTH_LIMIT = 60;
 
 // 获取地址栏的参数。
 function getUrlParam(param) {
@@ -321,4 +322,15 @@ function uniqueKeepOrder(items) {
     return items
         .filter(x => !!x)
         .filter((v, i, a) => noCaseIndexOf(a, v) === i);
+}
+
+/**
+ * 截短字符串，使 s 的长度不超过 i, 如果超过就截短。
+ * @param {string} s
+ * @param {number} i 长度上限
+ * @returns {string} 
+ */
+function truncate(s, i) {
+    if (s.length <= i) return s;
+    return s.substring(0, i) + ' ...';
 }

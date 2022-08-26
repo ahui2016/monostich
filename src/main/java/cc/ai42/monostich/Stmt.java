@@ -60,6 +60,11 @@ public class Stmt {
         UPDATE poem SET title=:title, stich=:stich WHERE id=:id;
         """;
 
+    public static final String UPDATE_POEMGROUP = """
+        UPDATE poemgroup SET title=:title, poems=:poems, updated=:updated
+        WHERE id=:id;
+        """;
+
     public static final String GET_POEM = """
         SELECT * FROM poem WHERE id = :id;
         """;
@@ -78,6 +83,10 @@ public class Stmt {
 
     public static final String DELETE_POEM = """
         DELETE FROM poem WHERE id = :id;
+        """;
+
+    public static final String DELETE_POEMGROUP = """
+        DELETE FROM poemgroup WHERE id = :id;
         """;
 
     public static final String SEARCH_POEMS = """

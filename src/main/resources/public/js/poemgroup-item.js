@@ -28,8 +28,13 @@ function PoemGroupItem(poemGroup) {
                 poems = resp.data;
                 poems.forEach(poem => {
                     poemsList.append(
-                        m('li').text(poem.stich),
-                    );
+                        m('li').append(
+                            span(truncate(poem.stich, GROUP_POEMS_LENGTH_LIMIT)),
+                            createLinkElem('#', {text: 'copy'}).addClass('CopyBtn').on('click', e => {
+                                e.preventDefault();
+                                copyToClipboard(poem.stich, ItemAlerts);
+                            })
+                        ));
                 });
             })
             .catch(err => {
