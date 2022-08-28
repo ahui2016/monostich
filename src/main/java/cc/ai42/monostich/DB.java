@@ -22,6 +22,7 @@ public class DB {
         this.jdbi.registerRowMapper(ConstructorMapper.factory(Poem.class));
         initCurrentId();
         initAppConfig();
+        initSearchHistory();
     }
 
     Optional<AppConfig> getAppConfig() {
@@ -51,6 +52,36 @@ public class DB {
         jdbi.useHandle(h -> h.createUpdate(Stmt.INSERT_METADATA)
                 .bind("name", Stmt.APP_CONFIG_NAME)
                 .bind("value", cfg.toJSON())
+                .execute());
+    }
+
+    Optional<String[]> getSearchHistory() {
+        var historyOpt = jdbi.withHandle(h -> h.select(Stmt.GET_METADATA)
+                .bind("name", Stmt.SEARCH_HISTORY)
+                .mapTo(String.class)
+                .findOne());
+
+        if (historyOpt.isEmpty()) return Optional.empty();
+
+        var history = Util.StrArrFromJSON(historyOpt.orElseThrow());
+        return Optional.of(history);
+    }
+
+    void updateSearchHistory(String[] history) {
+        jdbi.useHandle(h -> h.createUpdate(Stmt.UPDATE_METADATA)
+                .bind("name", Stmt.SEARCH_HISTORY)
+                .bind("value", Util.StrArrToJSON(history))
+                .execute());
+    }
+
+    void initSearchHistory() {
+        if (getSearchHistory().isPresent()) {
+            return;
+        }
+        String[] history = {};
+        jdbi.useHandle(h -> h.createUpdate(Stmt.INSERT_METADATA)
+                .bind("name", Stmt.SEARCH_HISTORY)
+                .bind("value", Util.StrArrToJSON(history))
                 .execute());
     }
 

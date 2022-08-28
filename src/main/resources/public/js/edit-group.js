@@ -53,9 +53,8 @@ const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
         group.poems = poems;
         group.updated = dayjs().unix();
         axios.post('/api/update-group', group)
-            .then(resp => {
-                Alerts.insert('success', '更新成功！');
-                SuccessArea.update(resp.data);
+            .then(() => {
+                FormAlerts.insert('success', '更新成功！');
             })
             .catch(err => {
                 FormAlerts.insert('danger', axiosErrToStr(err));

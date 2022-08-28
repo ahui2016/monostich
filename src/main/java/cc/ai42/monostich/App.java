@@ -24,6 +24,8 @@ public class App {
 
         app.get("/api/get-config", Handle.getAppConfig);
         app.post("/api/update-config", Handle.updateConfig);
+        app.get("/api/get-search-history", Handle.getSearchHistory);
+        app.post("/api/push-search-history", Handle.pushSearchHistory);
         app.post("/api/insert-poem", Handle.insertPoem);
         app.post("/api/insert-group", Handle.insertPoemGroup);
         app.post("/api/update-poem", Handle.updatePoem);

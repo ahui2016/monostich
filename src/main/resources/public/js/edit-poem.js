@@ -50,9 +50,8 @@ const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
         poem.title = title;
         poem.stich = stich;
         axios.post('/api/update-poem', poem)
-            .then(resp => {
-                Alerts.insert('success', '更新成功！');
-                SuccessArea.update(resp.data);
+            .then(() => {
+                FormAlerts.insert('success', '更新成功！');
             })
             .catch(err => {
                 FormAlerts.insert('danger', axiosErrToStr(err));

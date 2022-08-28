@@ -3,6 +3,8 @@ $('title').text('index - monostich');
 const Alerts = createAlerts();
 const Loading = createLoading();
 
+let searchHistoryArr = [];
+
 const NaviBar = cc('div', { children: [
     span('monostich (v0.0.1) .. '),
     span('Index'),
@@ -28,6 +30,7 @@ const NaviLinks = cc('div', {classes: 'NaviLinks', children: [
 ]});
 
 const SearchInput = createInput();
+const HistoryItems = cc('div', {classes: 'HistoryItems'});
 const SubmitBtn = cc('button', {text: 'search'});
 const SearchAlerts = createAlerts(4);
 
@@ -67,6 +70,8 @@ const SearchForm = cc('form', { children: [
             .catch(err => {
                 SearchAlerts.insert('danger', axiosErrToStr(err));
             });
+
+        updateHistory(body);
     }),
     m(SearchAlerts),
 ]});
@@ -76,6 +81,7 @@ $('#root').append(
     m(NaviLinks).addClass('text-right mr-1'),
     m(Loading).addClass('my-3').hide(),
     m(SearchForm).addClass('my-3'),
+    m(HistoryItems),
     m(Alerts),
     m(PoemList).addClass('my-3'),
     m(PoemGroupList).addClass('my-3'),
@@ -86,6 +92,7 @@ init();
 function init() {
     getRecentPoems();
     getRecentGroups();
+    initSearchHistory();
 }
 
 function getRecentPoems() {
@@ -122,4 +129,55 @@ function getRecentGroups() {
         Loading.hide();
         focus(SearchInput);
     });
+}
+
+function HistoryItem(h) {
+    const self = cc('a', {text: h, attr: {href: '#'}, classes: 'HistoryItem'});
+    self.init = () => {
+        self.elem().on('click', e => {
+            e.preventDefault();
+            SearchInput.elem().val(h);
+            SubmitBtn.elem().trigger('click');
+        });
+    };
+    return self;
+}
+
+function initSearchHistory() {
+    axios.get('/api/get-search-history')
+        .then(resp => {
+            searchHistoryArr = resp.data.filter(x => !!x);
+            if (!resp.data || searchHistoryArr.length == 0) {
+                return;
+            }
+            HistoryItems.show();
+            refreshHistory();
+        })
+        .catch(err => {
+            Alerts.insert('danger', axiosErrToStr(err));
+        });
+}
+
+function refreshHistory() {
+    HistoryItems.elem().html('');
+    appendToList(HistoryItems, searchHistoryArr.map(HistoryItem));
+}
+
+function updateHistory(body) {
+    const i = searchHistoryArr.findIndex(
+        x => x.toLowerCase() === body.pattern.toLowerCase());
+    if (i == 0) return;
+    if (i > 0) searchHistoryArr.splice(i, 1);
+
+    searchHistoryArr.unshift(body.pattern);
+    if (searchHistoryArr.length > HistoryLimit) {
+      searchHistoryArr.pop();
+    }
+    axios.post('/api/push-search-history', body)
+        .then(() => {
+            refreshHistory();
+        })
+        .catch(err => {
+            Alerts.insert('danger', axiosErrToStr(err));
+        });
 }

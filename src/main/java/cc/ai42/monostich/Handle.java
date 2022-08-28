@@ -3,8 +3,6 @@ package cc.ai42.monostich;
 import io.javalin.http.Handler;
 import io.javalin.http.NotFoundResponse;
 
-import java.time.Instant;
-
 public class Handle {
 
     static DB db = new DB("db/monostich.sqlite");
@@ -17,6 +15,19 @@ public class Handle {
     static Handler updateConfig = ctx -> {
         var cfg = ctx.bodyAsClass(AppConfig.class);
         db.updateAppConfig(cfg);
+    };
+
+    static Handler getSearchHistory = ctx -> {
+        var history = db.getSearchHistory().orElseThrow();
+        ctx.json(history);
+    };
+
+    static Handler pushSearchHistory = ctx -> {
+        var form = ctx.bodyAsClass(SearchForm.class);
+        var searchHistory = db.getSearchHistory().orElseThrow();
+        var history = new SearchHistory(searchHistory);
+        history.push(form.pattern());
+        db.updateSearchHistory(history.toArray());
     };
 
     static Handler insertPoem = ctx -> {
@@ -124,18 +135,4 @@ public class Handle {
         var groups = db.searchGroups(form.pattern());
         ctx.json(groups);
     };
-}
-
-record PoemForm(String title, String stich) {}
-
-record PoemGroupForm(String title, String[] poems) {}
-
-record SearchForm(String pattern) {}
-
-record IdForm(String id) {}
-
-class Util {
-    static long now() {
-        return Instant.now().getEpochSecond();
-    }
 }

@@ -33,6 +33,7 @@ public class Stmt {
 
     public static final String CURRENT_ID_NAME = "current-id";
     public static final String APP_CONFIG_NAME = "app-config";
+    public static final String SEARCH_HISTORY = "search-history";
 
     public static final String INSERT_METADATA = """
         INSERT INTO metadata (name, value) VALUES (:name, :value);
