@@ -63,14 +63,14 @@ public class DB {
 
         if (historyOpt.isEmpty()) return Optional.empty();
 
-        var history = Util.StrArrFromJSON(historyOpt.orElseThrow());
+        var history = Util.strArrFromJSON(historyOpt.orElseThrow());
         return Optional.of(history);
     }
 
     void updateSearchHistory(String[] history) {
         jdbi.useHandle(h -> h.createUpdate(Stmt.UPDATE_METADATA)
                 .bind("name", Stmt.SEARCH_HISTORY)
-                .bind("value", Util.StrArrToJSON(history))
+                .bind("value", Util.strArrToJSON(history))
                 .execute());
     }
 
@@ -81,7 +81,7 @@ public class DB {
         String[] history = {};
         jdbi.useHandle(h -> h.createUpdate(Stmt.INSERT_METADATA)
                 .bind("name", Stmt.SEARCH_HISTORY)
-                .bind("value", Util.StrArrToJSON(history))
+                .bind("value", Util.strArrToJSON(history))
                 .execute());
     }
 

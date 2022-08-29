@@ -3,6 +3,9 @@ $('title').text('index - monostich');
 const Alerts = createAlerts();
 const Loading = createLoading();
 
+// 要注意与 util.java SearchHistory maxSearchHistory 一致。
+const HistoryLimit = 20;
+
 let searchHistoryArr = [];
 
 const NaviBar = cc('div', { children: [
