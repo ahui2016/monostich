@@ -91,7 +91,7 @@ const SearchForm = cc('form', { children: [
 
         updateHistory(body);
     }),
-    m(SearchAlerts),
+    m(SearchAlerts).addClass('mt-2'),
 ]});
 
 $('#root').append(
@@ -186,17 +186,9 @@ function refreshHistory() {
 }
 
 function updateHistory(body) {
-    const i = searchHistoryArr.findIndex(
-        x => x.toLowerCase() === body.pattern.toLowerCase());
-    if (i != -1 && i == searchHistoryArr.length-1) return;
-    if (i > -1 && i < searchHistoryArr.length-1) searchHistoryArr.splice(i, 1);
-
-    searchHistoryArr.push(body.pattern);
-    if (searchHistoryArr.length > HistoryLimit) {
-      searchHistoryArr.shift();
-    }
     axios.post('/api/push-search-history', body)
-        .then(() => {
+        .then(resp => {
+            searchHistoryArr = resp.data;
             refreshHistory();
         })
         .catch(err => {

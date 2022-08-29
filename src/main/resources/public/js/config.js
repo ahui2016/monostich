@@ -9,6 +9,8 @@ const NaviBar = cc('div', { children: [
 ]});
 
 const MaxRecentInput = createInput();
+const ShowHistoryInput = createRadioCheck('checkbox', 'showSearchHistory', 'checked');
+const showHistoryBox = createBox(ShowHistoryInput, 'showSearchHistory');
 const SubmitBtn = cc('button', {text: 'Submit', classes: 'btn btn-fat'});
 const FormAlerts = createAlerts();
 
@@ -17,6 +19,10 @@ const HiddenBtn = cc('button', { id: 'submit', text: 'submit' });
 
 const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
     createFormItem(MaxRecentInput, 'MaxRecent', '最近项目列表条数上限'),
+    m('div').addClass('mb-3').append(
+        showHistoryBox,
+        m('div').addClass('form-text').text('是否显示最近搜索历史'),
+    ),
     m(FormAlerts).addClass('mb-3'),
     m(HiddenBtn).hide().on('click', e => {
         e.preventDefault();
@@ -32,6 +38,7 @@ const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
         }
         const body = {
             maxRecent: parseInt(maxRecentStr),
+            showSearchHistory: ShowHistoryInput.elem().prop('checked'),
         };
         axios.post('/api/update-config', body)
             .then(() => {
@@ -49,6 +56,7 @@ Form.init = () => {
             Form.show();
             cfg = resp.data;
             MaxRecentInput.elem().val(cfg.maxRecent);
+            ShowHistoryInput.elem().prop('checked', cfg.showSearchHistory);
         })
         .catch(err => {
             Alerts.insert('danger', axiosErrToStr(err));

@@ -18,7 +18,11 @@ public class Handle {
     };
 
     static Handler getSearchHistory = ctx -> {
-        var history = db.getSearchHistory().orElseThrow();
+        var history = new String[0];
+        var cfg = db.getAppConfig().orElseThrow();
+        if (cfg.showSearchHistory()) {
+            history = db.getSearchHistory().orElseThrow();
+        }
         ctx.json(history);
     };
 
@@ -27,7 +31,13 @@ public class Handle {
         var searchHistory = db.getSearchHistory().orElseThrow();
         var history = new SearchHistory(searchHistory);
         history.push(form.pattern());
-        db.updateSearchHistory(history.toArray());
+        searchHistory = history.toArray();
+        db.updateSearchHistory(searchHistory);
+        var cfg = db.getAppConfig().orElseThrow();
+        if (!cfg.showSearchHistory()) {
+            searchHistory = new String[0];
+        }
+        ctx.json(searchHistory);
     };
 
     static Handler clearSearchHistory = ctx -> {

@@ -238,7 +238,7 @@ function createRadioCheck(type, name, checked) {
  * @param {string} label 
  * @param {string?} title 
  * @param {string?} value 通常等于 label, 因此不常用
- * @returns {mjComponent}
+ * @returns {mjElement}
  */
 function createBox(item, label, title, value) {
     value = value ? value : label;
