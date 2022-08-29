@@ -32,8 +32,23 @@ const NaviLinks = cc('div', {classes: 'NaviLinks', children: [
     createLinkElem('/config.html', {text: 'Config'}),
 ]});
 
-const SearchInput = createInput();
 const HistoryItems = cc('div', {classes: 'HistoryItems'});
+const HistoryArea = cc('div', {classes: 'HistoryArea', children: [
+    span('Recent: ').addClass('text-grey'),
+    m(HistoryItems),
+    createLinkElem('#', {text: '(clear)'}).on('click', e => {
+        axios.get('/api/clear-search-history')
+            .then(() => {
+                searchHistoryArr = [];
+                refreshHistory();
+            })
+            .catch(err => {
+                Alerts.insert('danger', axiosErrToStr(err));
+            });
+    }),
+]});
+
+const SearchInput = createInput();
 const SubmitBtn = cc('button', {text: 'search'});
 const SearchAlerts = createAlerts(4);
 
@@ -84,7 +99,7 @@ $('#root').append(
     m(NaviLinks).addClass('text-right mr-1'),
     m(Loading).addClass('my-3').hide(),
     m(SearchForm).addClass('my-3'),
-    m(HistoryItems),
+    m(HistoryArea).hide(),
     m(Alerts),
     m(PoemList).addClass('my-3'),
     m(PoemGroupList).addClass('my-3'),
@@ -153,7 +168,6 @@ function initSearchHistory() {
             if (!resp.data || searchHistoryArr.length == 0) {
                 return;
             }
-            HistoryItems.show();
             refreshHistory();
         })
         .catch(err => {
@@ -163,18 +177,23 @@ function initSearchHistory() {
 
 function refreshHistory() {
     HistoryItems.elem().html('');
-    appendToList(HistoryItems, searchHistoryArr.map(HistoryItem));
+    if (searchHistoryArr.length == 0) {
+        HistoryArea.hide();
+        return;
+    }
+    HistoryArea.show();
+    prependToList(HistoryItems, searchHistoryArr.map(HistoryItem));
 }
 
 function updateHistory(body) {
     const i = searchHistoryArr.findIndex(
         x => x.toLowerCase() === body.pattern.toLowerCase());
-    if (i == 0) return;
-    if (i > 0) searchHistoryArr.splice(i, 1);
+    if (i != -1 && i == searchHistoryArr.length-1) return;
+    if (i > -1 && i < searchHistoryArr.length-1) searchHistoryArr.splice(i, 1);
 
-    searchHistoryArr.unshift(body.pattern);
+    searchHistoryArr.push(body.pattern);
     if (searchHistoryArr.length > HistoryLimit) {
-      searchHistoryArr.pop();
+      searchHistoryArr.shift();
     }
     axios.post('/api/push-search-history', body)
         .then(() => {

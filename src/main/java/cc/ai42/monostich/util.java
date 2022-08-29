@@ -6,11 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 record PoemForm(String title, String stich) {}
 
@@ -39,26 +35,6 @@ class Util {
         } catch (JsonProcessingException e) {
             throw new RuntimeException("StrArrToJSON(): " + e);
         }
-    }
-
-    static ArrayList<String> strArrToList(String[] strArr) {
-        return new ArrayList<>(Arrays.asList(strArr));
-    }
-
-    static int strIndexNoCase(String[] strArr, String elem) {
-        return Stream.of(strArr).map(String::toUpperCase)
-                .toList().indexOf(elem);
-    }
-
-    static String[] addOrMoveToTop(String[] strArr, String elem) {
-        var strList = strArrToList(strArr);
-        var i = strList.indexOf(elem);
-        if (i == 0) return strArr;
-        if (i > 0) {
-            strList.remove(i);
-        }
-        strList.add(0, elem);
-        return strList.toArray(new String[0]);
     }
 }
 

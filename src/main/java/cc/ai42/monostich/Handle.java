@@ -30,6 +30,10 @@ public class Handle {
         db.updateSearchHistory(history.toArray());
     };
 
+    static Handler clearSearchHistory = ctx -> {
+        db.updateSearchHistory(new String[0]);
+    };
+
     static Handler insertPoem = ctx -> {
         var form = ctx.bodyAsClass(PoemForm.class);
         var poem = new Poem(

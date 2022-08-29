@@ -162,3 +162,17 @@ textarea {
   margin-top: 0;
   margin-bottom: 0;
 }
+
+.HistoryArea > a {
+  color: var(--grey);
+  margin-left: 1rem;  
+}
+
+.HistoryItems {
+  display: inline-block;
+}
+
+.HistoryItems > a {
+  color: var(--grey);
+  margin-left: 0.5rem;
+}
