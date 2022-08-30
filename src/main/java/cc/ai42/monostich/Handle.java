@@ -1,6 +1,7 @@
 package cc.ai42.monostich;
 
 import io.javalin.http.Handler;
+import io.javalin.http.InternalServerErrorResponse;
 import io.javalin.http.NotFoundResponse;
 
 import java.nio.file.Path;
@@ -18,6 +19,12 @@ public class Handle {
         var form = ctx.bodyAsClass(FormStr1.class);
         var dbPath = Path.of(db.path()).toAbsolutePath();
         var dbPath2 = Path.of(form.val()).toAbsolutePath();
+        if (dbPath2.toFile().isDirectory()) {
+            throw new InternalServerErrorResponse(dbPath2.toString()+" 是文件夹。");
+        }
+        if (!dbPath2.getParent().toFile().exists()) {
+            throw new InternalServerErrorResponse(dbPath2.getParent().toString()+" 不存在。");
+        }
         if (dbPath.equals(dbPath2)) return;
         db = new DB(dbPath2.toString());
     };

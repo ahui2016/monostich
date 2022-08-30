@@ -257,7 +257,7 @@ function createBox(item, label, title, value) {
  */
 function axiosErrToStr(err) {
     if (err.response) {
-        return `${err.response.status}:${JSON.stringify(err.response.data)}`;
+        return `${err.response.status}: ${err.response.data.title}`;
     }
     if (err.request) {
         return err.request.status + ':The request was made but no response was received.';

@@ -13,10 +13,10 @@ public class App {
         Javalin app = Javalin.create(config -> {
             config.addStaticFiles(staticFiles -> {
                 staticFiles.hostedPath = "/";
-                staticFiles.directory = "src/main/resources/public";
-                staticFiles.location = Location.EXTERNAL;
-//                staticFiles.directory = "/public";
-//                staticFiles.location = Location.CLASSPATH;
+//                staticFiles.directory = "src/main/resources/public";
+//                staticFiles.location = Location.EXTERNAL;
+                staticFiles.directory = "/public";
+                staticFiles.location = Location.CLASSPATH;
             });
         }).start(port);
 
