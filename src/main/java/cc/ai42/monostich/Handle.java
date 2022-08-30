@@ -3,9 +3,24 @@ package cc.ai42.monostich;
 import io.javalin.http.Handler;
 import io.javalin.http.NotFoundResponse;
 
+import java.nio.file.Path;
+
 public class Handle {
 
-    static DB db = new DB("db/monostich.sqlite");
+    static DB db = new DB("db/monostich.db");
+
+    static Handler getDBPath = ctx -> {
+        var dbPath = Path.of(db.path()).toAbsolutePath().toString();
+        ctx.json(new FormStr1(dbPath));
+    };
+
+    static Handler changeDB = ctx -> {
+        var form = ctx.bodyAsClass(FormStr1.class);
+        var dbPath = Path.of(db.path()).toAbsolutePath();
+        var dbPath2 = Path.of(form.val()).toAbsolutePath();
+        if (dbPath.equals(dbPath2)) return;
+        db = new DB(dbPath2.toString());
+    };
 
     static Handler getAppConfig = ctx -> {
         var cfg = db.getAppConfig().orElseThrow();
@@ -27,10 +42,10 @@ public class Handle {
     };
 
     static Handler pushSearchHistory = ctx -> {
-        var form = ctx.bodyAsClass(SearchForm.class);
+        var form = ctx.bodyAsClass(FormStr1.class);
         var searchHistory = db.getSearchHistory().orElseThrow();
         var history = new SearchHistory(searchHistory);
-        history.push(form.pattern());
+        history.push(form.val());
         searchHistory = history.toArray();
         db.updateSearchHistory(searchHistory);
         var cfg = db.getAppConfig().orElseThrow();
@@ -139,14 +154,14 @@ public class Handle {
     };
 
     static Handler searchPoems = ctx -> {
-        var form = ctx.bodyAsClass(SearchForm.class);
-        var poems = db.searchPoems(form.pattern());
+        var form = ctx.bodyAsClass(FormStr1.class);
+        var poems = db.searchPoems(form.val());
         ctx.json(poems);
     };
 
     static Handler searchGroups = ctx -> {
-        var form = ctx.bodyAsClass(SearchForm.class);
-        var groups = db.searchGroups(form.pattern());
+        var form = ctx.bodyAsClass(FormStr1.class);
+        var groups = db.searchGroups(form.val());
         ctx.json(groups);
     };
 }

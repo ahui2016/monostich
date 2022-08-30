@@ -56,12 +56,12 @@ const SearchForm = cc('form', { children: [
     m(SearchInput),
     m(SubmitBtn).on('click', e => {
         e.preventDefault();
-        const body = { pattern: valOf(SearchInput, 'trim') };
-        if (body.pattern == '') {
+        const body = { val: valOf(SearchInput, 'trim') };
+        if (body.val == '') {
             focus(SearchInput);
             return;
         }
-        SearchAlerts.insert('primary', `正在检索: ${body.pattern}`);
+        SearchAlerts.insert('primary', `正在检索: ${body.val}`);
         PoemList.clear();
         PoemGroupList.clear();
         axios.post('/api/search-poems', body)
@@ -100,7 +100,7 @@ $('#root').append(
     m(Loading).addClass('my-3').hide(),
     m(SearchForm).addClass('my-3'),
     m(HistoryArea).hide(),
-    m(Alerts),
+    m(Alerts).addClass('mt-2'),
     m(PoemList).addClass('my-3'),
     m(PoemGroupList).addClass('my-3'),
 );
