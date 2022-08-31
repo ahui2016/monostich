@@ -20,7 +20,7 @@ public class Handle {
         var dbPath = Path.of(db.path()).toAbsolutePath();
         var dbPath2 = Path.of(form.val()).toAbsolutePath();
         if (dbPath2.toFile().isDirectory()) {
-            throw new InternalServerErrorResponse(dbPath2.toString()+" 是文件夹。");
+            throw new InternalServerErrorResponse(dbPath2+" 是文件夹。");
         }
         if (!dbPath2.getParent().toFile().exists()) {
             throw new InternalServerErrorResponse(dbPath2.getParent().toString()+" 不存在。");
@@ -62,18 +62,12 @@ public class Handle {
         ctx.json(searchHistory);
     };
 
-    static Handler clearSearchHistory = ctx -> {
-        db.updateSearchHistory(new String[0]);
-    };
+    static Handler clearSearchHistory = ctx ->
+            db.updateSearchHistory(new String[0]);
 
     static Handler insertPoem = ctx -> {
         var form = ctx.bodyAsClass(PoemForm.class);
-        var poem = new Poem(
-                db.getNextId(),
-                form.title(),
-                form.stich(),
-                Util.now());
-        db.insertPoem(poem);
+        var poem = db.insertPoem(form);
         ctx.json(poem);
     };
 

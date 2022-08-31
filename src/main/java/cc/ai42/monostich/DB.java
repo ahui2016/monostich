@@ -1,5 +1,6 @@
 package cc.ai42.monostich;
 
+import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 
@@ -85,24 +86,28 @@ public class DB {
                 .execute());
     }
 
-    Optional<String> getCurrentId() {
-    	return jdbi.withHandle(h -> h.select(Stmt.GET_METADATA)
+    Optional<String> getCurrentId(Handle h) {
+    	return h.select(Stmt.GET_METADATA)
     			.bind("name", Stmt.CURRENT_ID_NAME)
     			.mapTo(String.class)
-    			.findOne());
+    			.findOne();
     }
-    
-    void updateCurrentId(String id) {
-    	jdbi.useHandle(h -> h.createUpdate(Stmt.UPDATE_METADATA)
+
+    Optional<String> getCurrentId() {
+        return jdbi.withHandle(this::getCurrentId);
+    }
+
+    void updateCurrentId(Handle h, String id) {
+    	h.createUpdate(Stmt.UPDATE_METADATA)
     			.bind("name", Stmt.CURRENT_ID_NAME)
                 .bind("value", id)
-    			.execute());
+    			.execute();
     }
     
-    String getNextId() {
-    	var id = getCurrentId().orElseThrow();
+    String getNextId(Handle h) {
+    	var id = getCurrentId(h).orElseThrow();
     	var nextId = ShortID.parse(id).next().toString();
-    	updateCurrentId(nextId);
+    	updateCurrentId(h, nextId);
     	return nextId;
     }
 
@@ -117,10 +122,14 @@ public class DB {
                 .execute());
     }
 
-    void insertPoem(Poem poem) {
-        jdbi.useHandle(h -> h.createUpdate(Stmt.INSERT_POEM)
-                .bindMap(poem.toMap())
-                .execute());
+    Poem insertPoem(PoemForm form) {
+        return jdbi.withHandle(handle -> handle.inTransaction(h -> {
+            var poem = new Poem(getNextId(h), form.title(), form.stich(), Util.now());
+            h.createUpdate(Stmt.INSERT_POEM)
+                    .bindMap(poem.toMap())
+                    .execute();
+            return poem;
+        }));
     }
 
     void insertPoemGroup(PoemGroup poemGroup) {

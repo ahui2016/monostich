@@ -20,7 +20,7 @@ SuccessArea.update = (poem) => {
 };
 
 const TitleInput = createInput();
-const StichInput = createInput();
+const StichInput = createTextarea();
 const SubmitBtn = cc('button', {text: 'Submit', classes: 'btn btn-fat'});
 const FormAlerts = createAlerts();
 
@@ -38,17 +38,22 @@ const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
     m(SubmitBtn).on('click', event => {
         event.preventDefault();
         const title = valOf(TitleInput, 'trim');
-        const stich = valOf(StichInput, 'trim');
+        const stichRaw = valOf(StichInput, 'trim');
         if (!title) {
             FormAlerts.insert('danger', 'Title必填');
             focus(TitleInput);
             return;
         }
-        if (!stich) {
+        if (!stichRaw) {
             FormAlerts.insert('danger', 'Stich必填');
             focus(StichInput);
             return;
         }
+        const stich = stichRaw.split(/\r?\n/)
+                .map(s => s.trim())
+                .filter(x => !!x)
+                .join('\n');
+
         const body = {
             title: title,
             stich: stich,

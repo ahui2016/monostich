@@ -3,7 +3,8 @@
 多年以前我看到一篇神奇的文章 [Java for Everything](https://www.teamten.com/lawrence/writings/java-for-everything.html),
 其中提出了一个大胆的想法：就连脚本小工具都用 Java 来写。
 
-我读了这篇文章，但并没有立即使用 Java, 而是写了一段时间 Go, 又写了一段时间 Python, 最近想起这篇文章，就想用 Java 写点东西。
+我读了这篇文章，但并没有立即使用 Java, 而是写了一段时间 Go, 又写了一段时间 Python,
+最近想起这篇文章，就想用 Java 写点东西。
 
 ## Java 的优点
 
@@ -63,7 +64,6 @@ monostich 的功能非常简单。
 
 func main() {
 	e := echo.New()
-	e.Use(jsFile)
 	e.Static("/public", "public")
 	e.File("/", "public/index.html")
 
@@ -82,27 +82,95 @@ func main() {
 // github.com/ahui2016/monostich/.../App.java
 
 public class App {
-  public static void main(String[] args) {
-    Javalin app = Javalin.create(config -> {
-      config.addStaticFiles(staticFiles -> {
-        staticFiles.hostedPath = "/";
-        staticFiles.directory = "/public";
-        staticFiles.location = Location.CLASSPATH;
-      });
-    }).start(port);
-
-    app.post("/api/insert-poem", Handle.insertPoem);
-    app.post("/api/update-poem", Handle.updatePoem);
-    app.post("/api/delete-poem", Handle.deletePoem);
-    app.post("/api/get-poem", Handle.getPoem);
-    app.post("/api/search-poems", Handle.searchPoems);
-  }
+    public static void main(String[] args) {
+        Javalin app = Javalin.create(config ->
+            config.addStaticFiles(staticFiles -> {
+                staticFiles.hostedPath = "/";
+                staticFiles.directory = "/public";
+                staticFiles.location = Location.CLASSPATH;
+            })).start(port);
+    
+        app.post("/api/insert-poem", Handle.insertPoem);
+        app.post("/api/update-poem", Handle.updatePoem);
+        app.post("/api/delete-poem", Handle.deletePoem);
+        app.post("/api/get-poem", Handle.getPoem);
+        app.post("/api/search-poems", Handle.searchPoems);
+    }
 }
 ```
 
-## 相关文章
+### Handler
 
-本软件后端采用 Javalin, 前端采用 mj.js, 相关介绍请看以下文章。
+可见, Go 比 Java 多了一些 `if err != nil`, 其余代码几乎一模一样：
+
+```go
+// github.com/ahui2016/dictplus/blob/main/handler.go
+
+func addWordHandler(c echo.Context) error {
+	w := new(Word)
+	if err := c.Bind(w); err != nil {
+		return err
+	}
+	if err := db.InsertNewWord(w); err != nil {
+		return err
+	}
+	return c.JSON(OK, Text{w.ID})
+}
+```
+
+```java
+// github.com/ahui2016/monostich/.../Handle.java
+
+static Handler insertPoem = ctx -> {
+    var form = ctx.bodyAsClass(PoemForm.class);
+    var poem = db.insertPoem(form);
+    ctx.json(poem);
+};
+```
+
+### 数据库
+
+在上面 Handler 的代码中, db.InsertNewWord() 与 db.insertPoem() 的具体实现如下所示。
+
+可以看到, Go 的代码还是受到了 `if err != nil` 的困扰，显得很啰嗦，
+而 Java 采用 Stream API 的好处是非常明显的，代码简洁了很多。
+
+```go
+// github.com/ahui2016/dictplus/.../database.go
+
+func (db *DB) InsertNewWord(w *Word) (err error) {
+	tx := db.mustBegin()
+	defer tx.Rollback()
+
+	if w.ID, err = getNextID(tx, word_id_key); err != nil {
+		return
+	}
+	w.CTime = util.TimeNow()
+	if err = insertWord(tx, w); err != nil {
+		return
+	}
+	err = tx.Commit()
+	return
+}
+```
+
+```java
+// github.com/ahui2016/monostich/.../DB.java
+
+Poem insertPoem(PoemForm form) {
+    return jdbi.withHandle(handle -> handle.inTransaction(h -> {
+        var poem = new Poem(getNextId(h), form.title(), form.stich(), Util.now());
+        h.createUpdate(Stmt.INSERT_POEM)
+                .bindMap(poem.toMap())
+                .execute();
+        return poem;
+    }));
+}
+```
+
+## 相关链接
+
+本软件后端采用 Javalin, 前端采用 mj.js, 相关介绍请看以下链接。
 
 - [Javalin 官网](https://javalin.io/)
 - [超简单易用的 Java Web 框架 - Javalin](https://geeknote.net/SuperMild/posts/1428)

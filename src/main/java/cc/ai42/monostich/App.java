@@ -10,15 +10,16 @@ public class App {
             port = Integer.parseInt(args[0]);
         }
         @SuppressWarnings("resource")
-        Javalin app = Javalin.create(config -> {
-            config.addStaticFiles(staticFiles -> {
-                staticFiles.hostedPath = "/";
-//                staticFiles.directory = "src/main/resources/public";
-//                staticFiles.location = Location.EXTERNAL;
-                staticFiles.directory = "/public";
-                staticFiles.location = Location.CLASSPATH;
-            });
-        }).start(port);
+        Javalin app = Javalin.create(config ->
+                config.addStaticFiles(staticFiles -> {
+                    staticFiles.hostedPath = "/";
+                    staticFiles.directory = "src/main/resources/public";
+                    staticFiles.location = Location.EXTERNAL;
+/*
+                    staticFiles.directory = "/public";
+                    staticFiles.location = Location.CLASSPATH;
+*/
+                })).start(port);
 
         Print.ln("Database -> " + Handle.db.path());
 
