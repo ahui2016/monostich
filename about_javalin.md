@@ -167,6 +167,7 @@ Poem insertPoem(PoemForm form) {
 本软件后端采用 Javalin, 前端采用 mj.js, 相关介绍请看以下链接。
 
 - [Javalin 官网](https://javalin.io/)
+- [Monostich 源码仓库](https://github.com/ahui2016/monostich/)
 - [超简单易用的 Java Web 框架 - Javalin](https://geeknote.net/SuperMild/posts/1428)
 - [Javalin网站框架介绍之二 - 数据库](https://geeknote.net/SuperMild/posts/1430)
 - [受 Mithril.js 启发的零学习成本极易用框架 - mj.js](https://geeknote.net/SuperMild/posts/1450)

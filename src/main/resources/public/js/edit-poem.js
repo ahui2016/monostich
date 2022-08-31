@@ -36,17 +36,22 @@ const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
     m(SubmitBtn).on('click', event => {
         event.preventDefault();
         const title = valOf(TitleInput, 'trim');
-        const stich = valOf(StichInput, 'trim');
+        const stichRaw = valOf(StichInput, 'trim');
         if (!title) {
             FormAlerts.insert('danger', 'Title必填');
             focus(TitleInput);
             return;
         }
-        if (!stich) {
+        if (!stichRaw) {
             FormAlerts.insert('danger', 'Stich必填');
             focus(StichInput);
             return;
         }
+        const stich = stichRaw.split(/\r?\n/)
+                .map(s => s.trim())
+                .filter(x => !!x)
+                .join('\n');
+
         poem.title = title;
         poem.stich = stich;
         axios.post('/api/update-poem', poem)
