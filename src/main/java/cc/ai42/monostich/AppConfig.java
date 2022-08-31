@@ -10,7 +10,7 @@ public record AppConfig(
         boolean showSearchHistory // 是否展示最近搜索历史
 ) {
     public static AppConfig defaultCfg() {
-        return new AppConfig(25, true);
+        return new AppConfig(50, true);
     }
 
     public static AppConfig fromJSON(String blob) {

@@ -10,8 +10,6 @@ import java.util.Arrays;
 
 record PoemForm(String title, String stich) {}
 
-record PoemGroupForm(String title, String[] poems) {}
-
 /**
  * 意思是这个 Form 有一个类型为 String 的属性。
  * @param val

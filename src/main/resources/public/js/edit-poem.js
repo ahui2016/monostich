@@ -14,7 +14,7 @@ const NaviBar = cc('div', { children: [
 
 const IdInput = createInput();
 const TitleInput = createInput();
-const StichInput = createInput();
+const StichInput = createTextarea();
 const CreatedInput = createInput();
 const SubmitBtn = cc('button', {text: 'Update', classes: 'btn btn-fat'});
 const DelBtn = cc('a', {text: 'delete', classes: 'DelBtn', attr:{'href': '#'}});

@@ -19,16 +19,8 @@ PoemList.clear = () => {
     PoemList.elem().html('');
 }
 
-const PoemGroupList = cc('div', {id: 'PoemGroupList'});
-
-PoemGroupList.clear = () => {
-    PoemGroupList.elem().html('');
-}
-
 const NaviLinks = cc('div', {classes: 'NaviLinks', children: [
     createLinkElem('/new-poem.html', {text: 'New'}),
-    createLinkElem('/new-group.html', {text: 'NewGroup'}),
-    createLinkElem(PoemGroupList.id, {text: 'Groups'}),
     createLinkElem('/config.html', {text: 'Config'}),
 ]});
 
@@ -63,7 +55,6 @@ const SearchForm = cc('form', { children: [
         }
         SearchAlerts.insert('primary', `正在检索: ${body.val}`);
         PoemList.clear();
-        PoemGroupList.clear();
         axios.post('/api/search-poems', body)
             .then(resp => {
                 const poems = resp.data;
@@ -72,17 +63,6 @@ const SearchForm = cc('form', { children: [
                     appendToList(PoemList, poems.map(PoemItem));
                 } else {
                     SearchAlerts.insert('primary', '找不到句子。');
-                }
-            })
-            .catch(err => {
-                SearchAlerts.insert('danger', axiosErrToStr(err));
-            });
-        axios.post('/api/search-groups', body)
-            .then(resp => {
-                const groups = resp.data;
-                if (groups && groups.length > 0) {
-                    SearchAlerts.insert('success', `找到 ${groups.length} 个组合。`);
-                    appendToList(PoemGroupList, groups.map(PoemGroupItem));
                 }
             })
             .catch(err => {
@@ -102,14 +82,12 @@ $('#root').append(
     m(HistoryArea).hide(),
     m(Alerts).addClass('mt-2'),
     m(PoemList).addClass('my-3'),
-    m(PoemGroupList).addClass('my-3'),
 );
 
 init();
 
 function init() {
     getRecentPoems();
-    getRecentGroups();
     initSearchHistory();
 }
 
@@ -121,23 +99,6 @@ function getRecentPoems() {
             appendToList(PoemList, poems.map(PoemItem));
         } else {
             Alerts.insert('info', '空空如也');
-        }
-    })
-    .catch(err => {
-        Alerts.insert('danger', axiosErrToStr(err));
-    })
-    .then(() => {
-        Loading.hide();
-        focus(SearchInput);
-    });
-}
-
-function getRecentGroups() {
-    Loading.show();
-    axios.get('/api/recent-groups').then(resp => {
-        const groups = resp.data;
-        if (groups && groups.length > 0) {
-            appendToList(PoemGroupList, groups.map(PoemGroupItem));
         }
     })
     .catch(err => {

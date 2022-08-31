@@ -71,35 +71,9 @@ public class Handle {
         ctx.json(poem);
     };
 
-    static Handler insertPoemGroup = ctx -> {
-        var form = ctx.bodyAsClass(PoemGroupForm.class);
-        checkAllPoemsExist(form.poems());
-        var group = new PoemGroup(
-                RandomID.next(),
-                form.title(),
-                form.poems(),
-                Util.now());
-        db.insertPoemGroup(group);
-        ctx.json(group);
-    };
-
-    static void checkAllPoemsExist(String[] poems) {
-        for (var poemID: poems) {
-            if (db.getPoem(poemID).isEmpty()) {
-                throw new NotFoundResponse("Not Found id: " + poemID);
-            }
-        }
-    }
-
     static Handler updatePoem = ctx -> {
         var poem = ctx.bodyAsClass(Poem.class);
         db.updatePoem(poem);
-    };
-
-    static Handler updatePoemGroup = ctx -> {
-        var poemGroup = ctx.bodyAsClass(PoemGroup.class);
-        checkAllPoemsExist(poemGroup.poems());
-        db.updatePoemGroup(poemGroup);
     };
 
     static Handler deletePoem = ctx -> {
@@ -111,15 +85,6 @@ public class Handle {
         db.deletePoem(form.id());
     };
 
-    static Handler deletePoemGroup = ctx -> {
-        var form = ctx.bodyAsClass(IdForm.class);
-        var poemGroup = db.getPoemGroup(form.id());
-        if (poemGroup.isEmpty()) {
-            throw new NotFoundResponse("Not Found id: " + form.id());
-        }
-        db.deletePoemGroup(form.id());
-    };
-
     static Handler getPoem = ctx -> {
         var form = ctx.bodyAsClass(IdForm.class);
         var poem = db.getPoem(form.id());
@@ -129,40 +94,14 @@ public class Handle {
         ctx.json(poem.orElseThrow());
     };
 
-    static Handler getPoemGroup = ctx -> {
-        var form = ctx.bodyAsClass(IdForm.class);
-        var poemGroup = db.getPoemGroup(form.id());
-        if (poemGroup.isEmpty()) {
-            throw new NotFoundResponse("Not Found id: " + form.id());
-        }
-        ctx.json(poemGroup.orElseThrow());
-    };
-
-    static Handler getPoemsByGroup = ctx -> {
-        var form = ctx.bodyAsClass(IdForm.class);
-        var poems = db.getPoemsByGroupId(form.id());
-        ctx.json(poems);
-    };
-
     static Handler getRecentPoems = ctx -> {
         var poems = db.getRecentPoems();
         ctx.json(poems);
-    };
-
-    static Handler getRecentGroups = ctx -> {
-        var groups = db.getRecentGroups();
-        ctx.json(groups);
     };
 
     static Handler searchPoems = ctx -> {
         var form = ctx.bodyAsClass(FormStr1.class);
         var poems = db.searchPoems(form.val());
         ctx.json(poems);
-    };
-
-    static Handler searchGroups = ctx -> {
-        var form = ctx.bodyAsClass(FormStr1.class);
-        var groups = db.searchGroups(form.val());
-        ctx.json(groups);
     };
 }

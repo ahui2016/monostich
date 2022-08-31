@@ -4,7 +4,6 @@ import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -132,21 +131,9 @@ public class DB {
         }));
     }
 
-    void insertPoemGroup(PoemGroup poemGroup) {
-        jdbi.useHandle(h -> h.createUpdate(Stmt.INSERT_GROUP)
-                .bindMap(poemGroup.toMap())
-                .execute());
-    }
-
     void updatePoem(Poem poem) {
         jdbi.useHandle(h -> h.createUpdate(Stmt.UPDATE_POEM)
                 .bindMap(poem.toMap())
-                .execute());
-    }
-
-    void updatePoemGroup(PoemGroup poemGroup) {
-        jdbi.useHandle(h -> h.createUpdate(Stmt.UPDATE_POEMGROUP)
-                .bindMap(poemGroup.toMap())
                 .execute());
     }
 
@@ -157,30 +144,6 @@ public class DB {
                 .findOne());
     }
 
-    Optional<PoemGroup> getPoemGroup(String id) {
-        return jdbi.withHandle(h -> h.select(Stmt.GET_POEMGROUP)
-                .bind("id", id)
-                .map(new PoemGroupMapper())
-                .findOne());
-    }
-
-    List<Poem> getPoemsByGroupId(String id) {
-        var poemGroup = getPoemGroup(id).orElseThrow();
-        var poems = new ArrayList<Poem>();
-        for (var poemID: poemGroup.poems()) {
-            var poem = jdbi.withHandle(h -> h.select(Stmt.GET_POEM)
-                    .bind("id", poemID)
-                    .mapTo(Poem.class)
-                    .findOne());
-            if (poem.isEmpty()) {
-                poems.add(new Poem(poemID, poemID, poemID, 0));
-            } else {
-                poems.add(poem.orElseThrow());
-            }
-        }
-        return poems;
-    }
-
     List<Poem> getRecentPoems() {
         var cfg = getAppConfig().orElseThrow();
         return jdbi.withHandle(h -> h.select(Stmt.GET_RECENT_POEMS)
@@ -189,22 +152,8 @@ public class DB {
                 .list());
     }
 
-    List<PoemGroup> getRecentGroups() {
-        var cfg = getAppConfig().orElseThrow();
-        return jdbi.withHandle(h -> h.select(Stmt.GET_RECENT_GROUPS)
-                .bind("limit", cfg.maxRecent())
-                .map(new PoemGroupMapper())
-                .list());
-    }
-
     void deletePoem(String id) {
         jdbi.useHandle(h -> h.createUpdate(Stmt.DELETE_POEM)
-                .bind("id", id)
-                .execute());
-    }
-
-    void deletePoemGroup(String id) {
-        jdbi.useHandle(h -> h.createUpdate(Stmt.DELETE_POEMGROUP)
                 .bind("id", id)
                 .execute());
     }
@@ -216,16 +165,6 @@ public class DB {
         return jdbi.withHandle(h -> h.select(Stmt.SEARCH_POEMS)
                 .bind("title", "%"+pattern+"%")
                 .mapTo(Poem.class)
-                .list());
-    }
-
-    List<PoemGroup> searchGroups(String pattern) {
-        if (pattern.length() == 0) {
-            return List.of();
-        }
-        return jdbi.withHandle(h -> h.select(Stmt.SEARCH_GROUPS)
-                .bind("title", "%"+pattern+"%")
-                .map(new PoemGroupMapper())
                 .list());
     }
 }

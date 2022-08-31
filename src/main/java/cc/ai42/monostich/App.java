@@ -13,12 +13,12 @@ public class App {
         Javalin app = Javalin.create(config ->
                 config.addStaticFiles(staticFiles -> {
                     staticFiles.hostedPath = "/";
+/*
                     staticFiles.directory = "src/main/resources/public";
                     staticFiles.location = Location.EXTERNAL;
-/*
+*/
                     staticFiles.directory = "/public";
                     staticFiles.location = Location.CLASSPATH;
-*/
                 })).start(port);
 
         Print.ln("Database -> " + Handle.db.path());
@@ -34,18 +34,11 @@ public class App {
         app.get("/api/clear-search-history", Handle.clearSearchHistory);
 
         app.post("/api/insert-poem", Handle.insertPoem);
-        app.post("/api/insert-group", Handle.insertPoemGroup);
         app.post("/api/update-poem", Handle.updatePoem);
-        app.post("/api/update-group", Handle.updatePoemGroup);
         app.post("/api/delete-poem", Handle.deletePoem);
-        app.post("/api/delete-group", Handle.deletePoemGroup);
         app.post("/api/get-poem", Handle.getPoem);
-        app.post("/api/get-group", Handle.getPoemGroup);
-        app.post("/api/get-poems-by-group", Handle.getPoemsByGroup);
         app.get("/api/recent-poems", Handle.getRecentPoems);
-        app.get("/api/recent-groups", Handle.getRecentGroups);
 
         app.post("/api/search-poems", Handle.searchPoems);
-        app.post("/api/search-groups", Handle.searchGroups);
     }
 }
