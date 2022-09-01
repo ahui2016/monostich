@@ -167,4 +167,14 @@ public class DB {
                 .mapTo(Poem.class)
                 .list());
     }
+
+    /**
+     * 获取全部标题的前 n 个字符
+     */
+    List<String> getTruncatedTitles(int n) {
+        var titles = jdbi.withHandle(h -> h.select(Stmt.ALL_TITTLES)
+                .mapTo(String.class)
+                .list());
+        return Util.truncateStrList(titles, n);
+    }
 }

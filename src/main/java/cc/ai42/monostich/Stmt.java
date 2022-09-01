@@ -61,4 +61,8 @@ public class Stmt {
         SELECT * FROM poem WHERE title LIKE :title
         ORDER BY created DESC;
         """;
+
+    public static final String ALL_TITTLES = """
+        SELECT title FROM poem;
+        """;
 }

@@ -7,14 +7,16 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.List;
 
 record PoemForm(String title, String stich) {}
 
 /**
  * 意思是这个 Form 有一个类型为 String 的属性。
- * @param val
  */
 record FormStr1(String val) {}
+
+record FormInt1(int val) {}
 
 record IdForm(String id) {}
 
@@ -37,6 +39,18 @@ class Util {
         } catch (JsonProcessingException e) {
             throw new RuntimeException("StrArrToJSON(): " + e);
         }
+    }
+
+    /**
+     * 截取 strList 中每一个字符串的前 n 个字符。
+     */
+    static List<String> truncateStrList(List<String> strList, int n) {
+        return strList.stream()
+                .map(s -> {
+                    if (n > s.length()) return s.toUpperCase();
+                    return s.substring(0, n).toUpperCase();
+                })
+                .distinct().sorted().toList();
     }
 }
 

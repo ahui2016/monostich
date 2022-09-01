@@ -45,8 +45,8 @@ const SubmitBtn = cc('button', {text: 'search'});
 const SearchAlerts = createAlerts(4);
 
 const SearchForm = cc('form', { children: [
-    m(SearchInput),
-    m(SubmitBtn).on('click', e => {
+    m(SearchInput).addClass('SearchInput'),
+    m(SubmitBtn).addClass('ml-1 btn btn-fat').on('click', e => {
         e.preventDefault();
         const body = { val: valOf(SearchInput, 'trim') };
         if (body.val == '') {
@@ -59,10 +59,10 @@ const SearchForm = cc('form', { children: [
             .then(resp => {
                 const poems = resp.data;
                 if (poems && poems.length > 0) {
-                    SearchAlerts.insert('success', `找到 ${poems.length} 句话。`);
+                    SearchAlerts.insert('success', `找到 ${poems.length} 条记录。`);
                     appendToList(PoemList, poems.map(PoemItem));
                 } else {
-                    SearchAlerts.insert('primary', '找不到句子。');
+                    SearchAlerts.insert('primary', '找不到。');
                 }
             })
             .catch(err => {

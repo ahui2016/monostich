@@ -104,4 +104,10 @@ public class Handle {
         var poems = db.searchPoems(form.val());
         ctx.json(poems);
     };
+
+    static Handler getTruncatedTitles = ctx -> {
+        var form = ctx.bodyAsClass(FormInt1.class);
+        var n = form.val();
+        ctx.json(db.getTruncatedTitles(n));
+    };
 }

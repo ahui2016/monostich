@@ -131,7 +131,12 @@ textarea {
   margin-left: 0.75rem;
 }
 
-.PoemGroupItem,
+.SearchInput {
+  width: 50%;
+  line-height: 1.5;
+  padding: .375rem .25rem;
+}
+
 .PoemItem {
   margin-bottom: 1.5rem;
 }
@@ -141,7 +146,6 @@ textarea {
   color: var(--grey);
 }
 
-.GroupTitle,
 .PoemTitle {
   font-weight: bold;
 }
