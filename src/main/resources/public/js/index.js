@@ -30,20 +30,16 @@ const HistoryArea = cc('div', {classes: 'HistoryArea', children: [
     span('Recent: ').addClass('text-grey'),
     m(HistoryItems),
     createLinkElem('#', {text: '(clear)'}).on('click', e => {
-        axios.get('/api/clear-search-history')
-            .then(() => {
-                searchHistoryArr = [];
-                refreshHistory();
-            })
-            .catch(err => {
-                Alerts.insert('danger', axiosErrToStr(err));
-            });
+        axiosGet('/api/clear-search-history', Alerts, () => {
+            searchHistoryArr = [];
+            refreshHistory();
+        });
     }),
 ]});
 
 const SearchInput = createInput();
 const SubmitBtn = cc('button', {text: 'search'});
-const SearchAlerts = createAlerts(4);
+const SearchAlerts = createAlerts();
 
 const SearchForm = cc('form', { children: [
     m(SearchInput).addClass('SearchInput'),
@@ -56,20 +52,15 @@ const SearchForm = cc('form', { children: [
         }
         SearchAlerts.insert('primary', `正在检索: ${body.val}`);
         PoemList.clear();
-        axios.post('/api/search-poems', body)
-            .then(resp => {
-                const poems = resp.data;
-                if (poems && poems.length > 0) {
-                    SearchAlerts.insert('success', `找到 ${poems.length} 条记录。`);
-                    appendToList(PoemList, poems.map(PoemItem));
-                } else {
-                    SearchAlerts.insert('primary', '找不到。');
-                }
-            })
-            .catch(err => {
-                SearchAlerts.insert('danger', axiosErrToStr(err));
-            });
-
+        axiosPost('/api/search-poems', body, SearchAlerts, resp => {
+            const poems = resp.data;
+            if (poems && poems.length > 0) {
+                SearchAlerts.insert('success', `找到 ${poems.length} 条记录。`);
+                appendToList(PoemList, poems.map(PoemItem));
+            } else {
+                SearchAlerts.insert('primary', '找不到。');
+            }
+        });
         updateHistory(body);
     }),
     m(SearchAlerts).addClass('mt-2'),
@@ -93,18 +84,15 @@ function init() {
 }
 
 function getRecentPoems() {
-    axios.get('/api/recent-poems').then(resp => {
+    axiosGet('/api/recent-poems', Alerts, resp => {
         const poems = resp.data;
         if (poems && poems.length > 0) {
             appendToList(PoemList, poems.map(PoemItem));
         } else {
             Alerts.insert('info', '空空如也');
         }
-    })
-    .catch(err => {
-        Alerts.insert('danger', axiosErrToStr(err));
-    })
-    .then(() => {
+    },
+    () => {
         Loading.hide();
         focus(SearchInput);
     });
@@ -123,17 +111,13 @@ function HistoryItem(h) {
 }
 
 function initSearchHistory() {
-    axios.get('/api/get-search-history')
-        .then(resp => {
-            searchHistoryArr = resp.data.filter(x => !!x);
-            if (!resp.data || searchHistoryArr.length == 0) {
-                return;
-            }
-            refreshHistory();
-        })
-        .catch(err => {
-            Alerts.insert('danger', axiosErrToStr(err));
-        });
+    axiosGet('/api/get-search-history', Alerts, resp => {
+        searchHistoryArr = resp.data.filter(x => !!x);
+        if (!resp.data || searchHistoryArr.length == 0) {
+            return;
+        }
+        refreshHistory();
+    });
 }
 
 function refreshHistory() {
@@ -147,12 +131,8 @@ function refreshHistory() {
 }
 
 function updateHistory(body) {
-    axios.post('/api/push-search-history', body)
-        .then(resp => {
-            searchHistoryArr = resp.data;
-            refreshHistory();
-        })
-        .catch(err => {
-            Alerts.insert('danger', axiosErrToStr(err));
-        });
+    axiosPost('/api/push-search-history', body, Alerts, resp => {
+        searchHistoryArr = resp.data;
+        refreshHistory();
+    });
 }

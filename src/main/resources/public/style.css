@@ -181,6 +181,14 @@ textarea {
   margin-left: 0.5rem;
 }
 
+.TitleList {
+  display: flex;
+  flex-wrap: wrap;
+  /*justify-content: space-between;*/
+  row-gap: 20px;
+  column-gap: 30px;
+}
+
 .TitleItem {
   color: #FEFEFE;
   background-color: var(--grey);

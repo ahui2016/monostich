@@ -7,10 +7,11 @@ import java.io.IOException;
 
 public record AppConfig(
         int maxRecent, // 最近项目列表条数上限
-        boolean showSearchHistory // 是否展示最近搜索历史
+        boolean showSearchHistory, // 是否展示最近搜索历史
+        int indexTitleLength // 索引标题的截取长度
 ) {
     public static AppConfig defaultCfg() {
-        return new AppConfig(50, true);
+        return new AppConfig(50, true, 1);
     }
 
     public static AppConfig fromJSON(String blob) {

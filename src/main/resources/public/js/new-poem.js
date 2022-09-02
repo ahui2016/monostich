@@ -44,11 +44,6 @@ const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
             focus(TitleInput);
             return;
         }
-        if (!stichRaw) {
-            FormAlerts.insert('danger', 'Stich必填');
-            focus(StichInput);
-            return;
-        }
         const stich = stichRaw.split(/\r?\n/)
                 .map(s => s.trim())
                 .filter(x => !!x)
@@ -58,15 +53,11 @@ const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
             title: title,
             stich: stich,
         };
-        axios.post('/api/insert-poem', body)
-            .then((resp) => {
-                Form.hide();
-                Alerts.insert('success', '成功！');
-                SuccessArea.update(resp.data);
-            })
-            .catch(err => {
-                Alerts.insert('danger', axiosErrToStr(err));
-            });
+        axiosPost('/api/insert-poem', body, Alerts, resp => {
+            Form.hide();
+            Alerts.insert('success', '成功！');
+            SuccessArea.update(resp.data);
+        });
     }),
 ]});
 

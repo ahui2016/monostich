@@ -19,20 +19,23 @@ $('#root').append(
     m(NaviBar).addClass('text-large'),
     m(Loading).addClass('my-3'),
     m(Alerts).addClass('mt-2'),
-    m(TitleList).addClass('my-3'),
+    m(TitleList).addClass('my-5'),
 );
 
 init();
 
 function init() {
-    reloadTitles(1);
+    axiosGet('/api/get-config', Alerts, resp => {
+        cfg = resp.data;
+        reloadTitles(cfg.indexTitleLength);
+    });
 }
 
 /**
  * @param {number} n
  */
 function reloadTitles(n) {
-    axios.post('/api/get-truncated-titles', {val: n}).then(resp => {
+    axiosPost('/api/get-truncated-titles', {val: n}, Alerts, resp => {
         const titles = resp.data;
         if (titles && titles.length > 0) {
             TitleList.clear();
@@ -40,11 +43,8 @@ function reloadTitles(n) {
         } else {
             Alerts.insert('info', '空空如也');
         }
-    })
-    .catch(err => {
-        Alerts.insert('danger', axiosErrToStr(err));
-    })
-    .then(() => {
+    },
+    () => {
         Loading.hide();
     });
 }

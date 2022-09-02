@@ -55,13 +55,9 @@ const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
 
         poem.title = title;
         poem.stich = stich;
-        axios.post('/api/update-poem', poem)
-            .then(() => {
-                FormAlerts.insert('success', '更新成功！');
-            })
-            .catch(err => {
-                FormAlerts.insert('danger', axiosErrToStr(err));
-            });
+        axiosPost('/api/update-poem', poem, FormAlerts, () => {
+            FormAlerts.insert('success', '更新成功！');
+        });
     }),
     m(DelBtn).on('click', e => {
         e.preventDefault();
@@ -73,41 +69,33 @@ const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
             enable(DelBtn);
             DelBtn.elem().css('color', 'red').off().on('click', e => {
                 e.preventDefault();
-                axios.post('/api/delete-poem', {id: poemID})
-                    .then(() => {
-                        disable(TitleInput);
-                        disable(StichInput);
-                        SubmitBtn.hide();
-                        DelBtn.hide();
-                        FormAlerts.clear().insert('success', '已彻底删除。');
-                    })
-                    .catch(err => {
-                        FormAlerts.insert('danger', axiosErrToStr(err));
-                    });
+                axiosPost('/api/delete-poem', {id: poemID}, FormAlerts, () => {
+                    disable(TitleInput);
+                    disable(StichInput);
+                    SubmitBtn.hide();
+                    DelBtn.hide();
+                    FormAlerts.clear().insert('success', '已彻底删除。');
+                });
             });
         }, 2000);
     }),
 ]});
 
 Form.init = () => {
-    axios.post('/api/get-poem', {id: poemID})
-        .then(resp => {
-            Form.show();
-            poem = resp.data;
-            IdInput.elem().val(poem.id);
-            disable(IdInput);
-            TitleInput.elem().val(poem.title);
-            StichInput.elem().val(poem.stich);
-            const created = dayjs.unix(poem.created);
-            CreatedInput.elem().val(created.format(DATE_TIME_FORMAT));
-            disable(CreatedInput);
-        })
-        .catch(err => {
-            Alerts.insert('danger', axiosErrToStr(err));
-        })
-        .then(() => {
-            Loading.hide();
-        });
+    axiosPost('/api/get-poem', {id: poemID}, Alerts, resp => {
+        Form.show();
+        poem = resp.data;
+        IdInput.elem().val(poem.id);
+        disable(IdInput);
+        TitleInput.elem().val(poem.title);
+        StichInput.elem().val(poem.stich);
+        const created = dayjs.unix(poem.created);
+        CreatedInput.elem().val(created.format(DATE_TIME_FORMAT));
+        disable(CreatedInput);
+    },
+    () => {
+        Loading.hide();
+    });
 };
 
 $('#root').append(

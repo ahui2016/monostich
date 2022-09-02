@@ -86,9 +86,9 @@ function createLoading(align) {
 /**
  * 当 max <= 0 时，不限制数量。
  * msgType: "success" | "danger" | "info" | "primary"
- * @param {number} max default = 3
+ * @param {number} max default = 5
  */
-function createAlerts(max = 3) {
+function createAlerts(max = 5) {
     const alerts = cc("div");
     alerts.max = max;
     alerts.count = 0;
@@ -251,21 +251,6 @@ function createBox(item, label, title, value) {
 }
 
 /**
- * https://axios-http.com/docs/handling_errors
- * @param {AxiosError} err 
- * @returns {string}
- */
-function axiosErrToStr(err) {
-    if (err.response) {
-        return `${err.response.status}: ${err.response.data.title}`;
-    }
-    if (err.request) {
-        return err.request.status + ':The request was made but no response was received.';
-    }
-    return err.message;
-}
-
-/**
  * 如果 id 以数字开头，就需要使用 elemID 给它改成以字母开头，
  * 因为 DOM 的 ID 不允许以数字开头。
  * @param {string} id
@@ -333,4 +318,47 @@ function uniqueKeepOrder(items) {
 function truncate(s, i) {
     if (s.length <= i) return s;
     return s.substring(0, i) + ' ...';
+}
+
+/**
+ * https://axios-http.com/docs/handling_errors
+ * @param {AxiosError} err
+ * @returns {string}
+ */
+function axiosErrToStr(err) {
+    if (err.response) {
+        return `${err.response.status}: ${err.response.data.title}`;
+    }
+    if (err.request) {
+        return err.request.status + ':The request was made but no response was received.';
+    }
+    return err.message;
+}
+
+/**
+ * axios get with default error handler.
+ */
+function axiosGet(url, alerts, onSuccess, onAlways) {
+    axios.get(url)
+        .then(onSuccess)
+        .catch(err => {
+            alerts.insert('danger', axiosErrToStr(err));
+        })
+        .then(() => {
+            if (onAlways) onAlways();
+        });
+}
+
+/**
+ * axios post with default error handler.
+ */
+function axiosPost(url, body, alerts, onSuccess, onAlways) {
+    axios.post(url, body)
+        .then(onSuccess)
+        .catch(err => {
+            alerts.insert('danger', axiosErrToStr(err));
+        })
+        .then(() => {
+            if (onAlways) onAlways();
+        });
 }
