@@ -1,4 +1,4 @@
-$('title').text('index - monostich');
+$('title').text('Home - Monostich');
 
 const Alerts = createAlerts();
 const Loading = createLoading();
@@ -9,8 +9,8 @@ const HistoryLimit = 20;
 let searchHistoryArr = [];
 
 const NaviBar = cc('div', { children: [
-    span('monostich (v0.0.1) .. '),
-    span('Index'),
+    span('Monostich (v0.0.1) .. '),
+    span('Home'),
 ]});
 
 const PoemList = cc('div');
@@ -21,6 +21,7 @@ PoemList.clear = () => {
 
 const NaviLinks = cc('div', {classes: 'NaviLinks', children: [
     createLinkElem('/new-poem.html', {text: 'New'}),
+    createLinkElem('/title-index.html', {text: 'Index'}),
     createLinkElem('/config.html', {text: 'Config'}),
 ]});
 
@@ -77,7 +78,7 @@ const SearchForm = cc('form', { children: [
 $('#root').append(
     m(NaviBar).addClass('text-large'),
     m(NaviLinks).addClass('text-right mr-1'),
-    m(Loading).addClass('my-3').hide(),
+    m(Loading).addClass('my-3'),
     m(SearchForm).addClass('my-3'),
     m(HistoryArea).hide(),
     m(Alerts).addClass('mt-2'),
@@ -92,7 +93,6 @@ function init() {
 }
 
 function getRecentPoems() {
-    Loading.show();
     axios.get('/api/recent-poems').then(resp => {
         const poems = resp.data;
         if (poems && poems.length > 0) {

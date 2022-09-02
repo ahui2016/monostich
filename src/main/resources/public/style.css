@@ -1,5 +1,5 @@
 :root {
-  --grey: #a1a1aa;
+  --grey: #A1A1AA;
 }
 
 hr {
@@ -179,4 +179,23 @@ textarea {
 .HistoryItems > a {
   color: var(--grey);
   margin-left: 0.5rem;
+}
+
+.TitleItem {
+  color: #FEFEFE;
+  background-color: var(--grey);
+  padding: .35em .65em;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.Loading {
+  font-weight: bold;
+  animation: blinker 2s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
 }

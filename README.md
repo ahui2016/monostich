@@ -1,8 +1,8 @@
-# monostich (单行诗)
+# Monostich (单行诗)
 
 本项目原名 cmdcopy, 主要用途是记录和复制 CLI 命令，
 后来想扩展用途，用来记录任意一句话（例如一条命令、一个网址、一句备忘等等），
-因此改名为 monostich。
+因此改名为 Monostich。
 
 ## 安装
 

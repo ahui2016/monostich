@@ -1,13 +1,14 @@
-$('title').text('Edit poem - monostich');
+$('title').text('Edit poem - Monostich');
 
 const poemID = getUrlParam('id');
 
 let poem;
 
 const Alerts = createAlerts();
+const Loading = createLoading();
 
 const NaviBar = cc('div', { children: [
-    createLinkElem('/', {text: 'monostich'}),
+    createLinkElem('/', {text: 'Monostich'}),
     span(' .. '),
     span('Edit poem'),
 ]});
@@ -103,12 +104,16 @@ Form.init = () => {
         })
         .catch(err => {
             Alerts.insert('danger', axiosErrToStr(err));
+        })
+        .then(() => {
+            Loading.hide();
         });
 };
 
 $('#root').append(
     m(NaviBar).addClass('my-3'),
     m(Alerts).addClass('my-3'),
+    m(Loading).addClass('my-3'),
     m(Form).hide(),
 );
     
