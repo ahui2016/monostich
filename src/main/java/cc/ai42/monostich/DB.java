@@ -4,6 +4,7 @@ import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -158,14 +159,39 @@ public class DB {
                 .execute());
     }
 
+    /**
+     * sqlite 的语句使用了 like, 因此默认不分大小写。
+     */
     List<Poem> searchPoems(String pattern) {
         if (pattern.length() == 0) {
             return List.of();
         }
-        return jdbi.withHandle(h -> h.select(Stmt.SEARCH_POEMS)
+
+        // 搜索标题，前缀匹配优先。
+        var result = jdbi.withHandle(h -> h.select(Stmt.SEARCH_POEMS)
                 .bind("title", "%"+pattern+"%")
                 .mapTo(Poem.class)
                 .list());
+        var poemsHead = new ArrayList<Poem>();
+        var poemsTail = new ArrayList<Poem>();
+        for (var poem: result) {
+            if (poem.title().toUpperCase().startsWith(pattern.toUpperCase())) {
+                poemsHead.add(poem);
+            } else {
+                poemsTail.add(poem);
+            }
+        }
+        poemsHead.addAll(poemsTail);
+
+        // 搜索 stich
+        var result2 = jdbi.withHandle(h -> h.select(Stmt.SEARCH_POEMS_STICH)
+                .bind("stich", "%"+pattern+"%")
+                .mapTo(Poem.class)
+                .list());
+        for (var poem: result2) {
+            if (!poemsHead.contains(poem)) poemsHead.add(poem);
+        }
+        return poemsHead;
     }
 
     /**

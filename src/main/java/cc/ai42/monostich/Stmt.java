@@ -62,6 +62,11 @@ public class Stmt {
         ORDER BY created DESC;
         """;
 
+    public static final String SEARCH_POEMS_STICH = """
+        SELECT * FROM poem WHERE stich LIKE :stich
+        ORDER BY created DESC;
+        """;
+
     public static final String ALL_TITTLES = """
         SELECT title FROM poem;
         """;
