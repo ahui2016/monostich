@@ -1,4 +1,4 @@
-$('title').text('Config - monostich');
+$('title').text('Config - Monostich');
 
 let cfg;
 let dbPath;
@@ -6,7 +6,7 @@ let dbPath;
 const Alerts = createAlerts();
 
 const NaviBar = cc('div', { children: [
-    createLinkElem('/', {text: 'monostich'}),
+    createLinkElem('/', {text: 'Monostich'}),
     span(' .. '),
     span('Config'),
 ]});
@@ -101,7 +101,7 @@ Form.init = () => {
         ShowHistoryInput.elem().prop('checked', cfg.showSearchHistory);
         IndexTitleLength.elem().val(cfg.indexTitleLength);
     });
-    
+
     axiosGet('/api/get-db-path', Alerts, resp => {
         dbPath = resp.data.val;
         DBPathInput.elem().val(dbPath);

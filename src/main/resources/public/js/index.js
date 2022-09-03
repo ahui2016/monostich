@@ -10,7 +10,8 @@ let searchHistoryArr = [];
 
 const NaviBar = cc('div', { children: [
     span('Monostich (v0.0.1) .. '),
-    span('Home'),
+    span('Home '),
+    createLinkElem('/', {text: '(reload)'}),
 ]});
 
 const PoemList = cc('div');
@@ -51,7 +52,9 @@ const SearchForm = cc('form', { children: [
             return;
         }
         SearchAlerts.insert('primary', `正在检索: ${body.val}`);
+
         PoemList.clear();
+        Loading.show();
         axiosPost('/api/search-poems', body, SearchAlerts, resp => {
             const poems = resp.data;
             if (poems && poems.length > 0) {
@@ -60,6 +63,9 @@ const SearchForm = cc('form', { children: [
             } else {
                 SearchAlerts.insert('primary', '找不到。');
             }
+        },
+        () => {
+            Loading.hide();
         });
         updateHistory(body);
     }),
@@ -69,18 +75,28 @@ const SearchForm = cc('form', { children: [
 $('#root').append(
     m(NaviBar).addClass('text-large'),
     m(NaviLinks).addClass('text-right mr-1'),
-    m(Loading).addClass('my-3'),
     m(SearchForm).addClass('my-3'),
     m(HistoryArea).hide(),
     m(Alerts).addClass('mt-2'),
+    m(Loading).addClass('my-3'),
     m(PoemList).addClass('my-3'),
 );
 
 init();
 
 function init() {
-    getRecentPoems();
+    const pattern = getUrlParam('pattern');
+    if (pattern) {
+        searchUrlParam(pattern.trim());
+    } else {
+        getRecentPoems();
+    }
     initSearchHistory();
+}
+
+function searchUrlParam(pattern) {
+    SearchInput.elem().val(pattern);
+    SubmitBtn.elem().trigger('click');
 }
 
 function getRecentPoems() {
