@@ -12,11 +12,15 @@ const NaviBar = cc('div', { children: [
 ]});
 
 const MaxRecentInput = createInput();
-const ShowHistoryInput = createRadioCheck('checkbox', 'showSearchHistory', 'checked');
-const showHistoryBox = createBox(ShowHistoryInput, 'showSearchHistory');
+const ShowHistoryInput = createRadioCheck('checkbox', 'show-search-history');
+const showHistoryBox = createBox(ShowHistoryInput, 'ShowSearchHistory');
 const IndexTitleLength = createInput();
 
 const DBPathInput = createInput();
+const DBNameInput = createInput();
+const ShowDBNameInput = createRadioCheck('checkbox', 'show-database-name');
+const showDBNameBox = createBox(ShowDBNameInput, 'ShowDatabaseName');
+
 const SubmitBtn = cc('button', {text: 'Submit', classes: 'btn btn-fat'});
 const FormAlerts = createAlerts();
 
@@ -25,12 +29,11 @@ const HiddenBtn = cc('button', { id: 'submit', text: 'submit' });
 
 const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
     createFormItem(MaxRecentInput, 'MaxRecent', '最近项目列表条数上限'),
-    m('div').addClass('mb-3').append(
-        showHistoryBox,
-        m('div').addClass('form-text').text('是否显示最近搜索历史'),
-    ),
+    createFormBox(showHistoryBox, '是否显示最近搜索历史'),
     createFormItem(IndexTitleLength, 'IndexTitleLength', '索引标题的截取长度'),
     createFormItem(DBPathInput, 'DatabasePath', '切换数据库，可输入相对路径或绝对路径'),
+    createFormItem(DBNameInput, 'DatabaseName', '数据库名称，可留空'),
+    createFormBox(showDBNameBox, '是否在首页显示数据库名称'),
     m(FormAlerts).addClass('mb-3'),
     m(HiddenBtn).hide().on('click', e => {
         e.preventDefault();
@@ -62,10 +65,14 @@ const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
             return;
         }
 
+        const dbNameVal = valOf(DBNameInput, 'trim');
+
         const body = {
             maxRecent: maxRecent,
             showSearchHistory: ShowHistoryInput.elem().prop('checked'),
             indexTitleLength: indexTitleLength,
+            databaseName: valOf(DBNameInput, 'trim'),
+            showDatabaseName: ShowDBNameInput.elem().prop('checked'),
         };
 
         const body2 = {
@@ -74,10 +81,16 @@ const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
 
         if (body.maxRecent == cfg.maxRecent
             && body.showSearchHistory == cfg.showSearchHistory
-            && body.indexTitleLength == cfg.indexTitleLength)
+            && body.indexTitleLength == cfg.indexTitleLength
+            && body.databaseName == cfg.databaseName
+            && body.showDatabaseName == cfg.showDatabaseName)
         {
             FormAlerts.insert('info', 'Config 无变化');
         } else {
+            if (dbPathVal != dbPath) {
+                FormAlerts.insert('danger', 'DatabasePath 只能单独更改，不可与其它项目同时更改');
+                return;
+            }
             axiosPost('/api/update-config', body, FormAlerts, () => {
                 FormAlerts.insert('success', 'config 更新成功！');
             });
@@ -88,6 +101,8 @@ const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
         } else {
             axiosPost('/api/change-db', body2, FormAlerts, () => {
                 FormAlerts.insert('success', 'DatabasePath 切换成功！');
+                FormAlerts.insert('info', '三秒后将自动刷新本页！');
+                setTimeout(() => { location.reload() }, 3000);
             });
         }
     }),
@@ -100,6 +115,8 @@ Form.init = () => {
         MaxRecentInput.elem().val(cfg.maxRecent);
         ShowHistoryInput.elem().prop('checked', cfg.showSearchHistory);
         IndexTitleLength.elem().val(cfg.indexTitleLength);
+        DBNameInput.elem().val(cfg.databaseName);
+        ShowDBNameInput.elem().prop('checked', cfg.showDatabaseName);
     });
 
     axiosGet('/api/get-db-path', Alerts, resp => {

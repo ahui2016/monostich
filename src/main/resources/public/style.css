@@ -16,6 +16,10 @@ textarea {
   display: block;
 }
 
+.form-box-label {
+  font-weight: bold;
+}
+
 .btn-fat {
   padding: .375rem .75rem;
   /* border-radius: .25rem; */

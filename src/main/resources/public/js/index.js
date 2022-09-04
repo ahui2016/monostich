@@ -9,9 +9,17 @@ const HistoryLimit = 20;
 let searchHistoryArr = [];
 
 const NaviBar = cc('div', { children: [
-    span('Monostich (v0.0.1) .. '),
+    span('Monostich (v0.0.3) .. '),
     span('Home '),
     createLinkElem('/', {text: '(reload)'}),
+]});
+
+const DBName = cc('div');
+
+const NaviLinks = cc('div', {classes: 'NaviLinks', children: [
+    createLinkElem('/new-poem.html', {text: 'New'}),
+    createLinkElem('/title-index.html', {text: 'Index'}),
+    createLinkElem('/config.html', {text: 'Config'}),
 ]});
 
 const PoemList = cc('div');
@@ -19,12 +27,6 @@ const PoemList = cc('div');
 PoemList.clear = () => {
     PoemList.elem().html('');
 }
-
-const NaviLinks = cc('div', {classes: 'NaviLinks', children: [
-    createLinkElem('/new-poem.html', {text: 'New'}),
-    createLinkElem('/title-index.html', {text: 'Index'}),
-    createLinkElem('/config.html', {text: 'Config'}),
-]});
 
 const HistoryItems = cc('div', {classes: 'HistoryItems'});
 const HistoryArea = cc('div', {classes: 'HistoryArea', children: [
@@ -74,6 +76,7 @@ const SearchForm = cc('form', { children: [
 
 $('#root').append(
     m(NaviBar).addClass('text-large'),
+    m(DBName),
     m(NaviLinks).addClass('text-right mr-1'),
     m(SearchForm).addClass('my-3'),
     m(HistoryArea).hide(),
@@ -85,13 +88,25 @@ $('#root').append(
 init();
 
 function init() {
+    getDatabaseName();
+
     const pattern = getUrlParam('pattern');
     if (pattern) {
         searchUrlParam(pattern.trim());
     } else {
         getRecentPoems();
     }
+
     initSearchHistory();
+}
+
+function getDatabaseName() {
+    axiosGet('/api/get-config', Alerts, resp => {
+        cfg = resp.data;
+        if (cfg.showDatabaseName && cfg.databaseName) {
+            DBName.elem().text(cfg.databaseName);
+        }
+    });
 }
 
 function searchUrlParam(pattern) {

@@ -209,6 +209,21 @@ function createFormItem(comp, name, description, classes = "mb-3") {
 }
 
 /**
+ * 主要用来给 radio button 或 checkbox 包裹一层。
+ * @param {mjElement} elem 主是是用 createBox 函数生成的组件。
+ * @param {string | mjElement} description
+ * @param {string} classes default = "mb-3"
+ * @returns {mjElement}
+ */
+function createFormBox(elem, description, classes = "mb-3") {
+    let descElem = description;
+    if (typeof description == "string") {
+        descElem = m("div").addClass("form-text").text(description);
+    }
+    return m("div").addClass(classes).append(elem, descElem);
+}
+
+/**
  * @param {string} name
  * @returns {mjElement}
  */
@@ -246,7 +261,8 @@ function createBox(item, label, title, value) {
         .addClass("form-check-inline")
         .append(
             m(item).attr({value: value, title: title}),
-            m("label").text(label).attr({for: item.raw_id, title: title})
+            m("label").addClass('form-box-label')
+                .text(label).attr({for: item.raw_id, title: title}),
         );
 }
 
