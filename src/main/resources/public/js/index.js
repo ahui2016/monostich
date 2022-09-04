@@ -9,7 +9,7 @@ const HistoryLimit = 20;
 let searchHistoryArr = [];
 
 const NaviBar = cc('div', { children: [
-    span('Monostich (v0.0.3) .. '),
+    span('Monostich (v0.0.4) .. '),
     span('Home '),
     createLinkElem('/', {text: '(reload)'}),
 ]});

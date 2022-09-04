@@ -20,6 +20,8 @@ record FormInt1(int val) {}
 
 record IdForm(String id) {}
 
+record MovePoemForm(String id, String dbPath) {}
+
 class Util {
     static long now() {
         return Instant.now().getEpochSecond();

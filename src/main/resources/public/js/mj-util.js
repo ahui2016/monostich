@@ -156,7 +156,7 @@ interface LinkOptions {
 
 /**
  * @param {string} href 
- * @param {LinkOptions?} options LinkOptions{text?: string, title?: string, blank?: "blank"}
+ * @param {LinkOptions?} options LinkOptions{text?: string, title?: string, blank?: boolean}
  * @returns {mjElement}
  */
 function createLinkElem(href, options) {
@@ -166,7 +166,7 @@ function createLinkElem(href, options) {
     if (!options.text) options.text = href;
     const link = m("a").text(options.text).attr("href", href);
     if (options.title) link.attr("title", options.title);
-    if (options.blank == "blank") link.attr("target", "_blank");
+    if (options.blank) link.attr("target", "_blank");
     return link;
 }
 

@@ -29,11 +29,11 @@ const HiddenBtn = cc('button', { id: 'submit', text: 'submit' });
 
 const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
     createFormItem(MaxRecentInput, 'MaxRecent', '最近项目列表条数上限'),
-    createFormBox(showHistoryBox, '是否显示最近搜索历史'),
+    createFormBox(showHistoryBox, '显示最近搜索历史'),
     createFormItem(IndexTitleLength, 'IndexTitleLength', '索引标题的截取长度'),
     createFormItem(DBPathInput, 'DatabasePath', '切换数据库，可输入相对路径或绝对路径'),
     createFormItem(DBNameInput, 'DatabaseName', '数据库名称，可留空'),
-    createFormBox(showDBNameBox, '是否在首页显示数据库名称'),
+    createFormBox(showDBNameBox, '在首页显示数据库名称'),
     m(FormAlerts).addClass('mb-3'),
     m(HiddenBtn).hide().on('click', e => {
         e.preventDefault();

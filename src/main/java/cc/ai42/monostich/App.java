@@ -37,6 +37,7 @@ public class App {
         app.post("/api/update-poem", Handle.updatePoem);
         app.post("/api/delete-poem", Handle.deletePoem);
         app.post("/api/get-poem", Handle.getPoem);
+        app.post("/api/move-poem", Handle.movePoem);
         app.get("/api/recent-poems", Handle.getRecentPoems);
 
         app.post("/api/search-poems", Handle.searchPoems);

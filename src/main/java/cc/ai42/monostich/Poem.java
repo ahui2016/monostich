@@ -18,4 +18,8 @@ public record Poem(String id, String title, String stich, long created) {
                 "created", created
         );
     }
+
+    PoemForm toForm() {
+        return new PoemForm(title, stich);
+    }
 }

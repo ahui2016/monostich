@@ -4,11 +4,13 @@ import io.javalin.http.Handler;
 import io.javalin.http.InternalServerErrorResponse;
 import io.javalin.http.NotFoundResponse;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Handle {
 
-    static DB db = new DB("db/monostich.db");
+    static final String defaultDBPath = "db/monostich.db";
+    static DB db = new DB(defaultDBPath);
 
     static Handler getDBPath = ctx -> {
         var dbPath = Path.of(db.path()).toAbsolutePath().toString();
@@ -92,6 +94,21 @@ public class Handle {
             throw new NotFoundResponse("Not Found id: " + form.id());
         }
         ctx.json(poem.orElseThrow());
+    };
+
+    static Handler movePoem = ctx -> {
+        var form = ctx.bodyAsClass(MovePoemForm.class);
+        var poem = db.getPoem(form.id()).orElseThrow();
+        var otherDB = new DB(form.dbPath());
+        var otherDBPath = Path.of(otherDB.path()).toAbsolutePath().toString();
+
+        if (Files.isSameFile(Path.of(db.path()), Path.of(otherDB.path()))) {
+            throw new InternalServerErrorResponse("目标数据库不能等同当前数据库: " + otherDBPath);
+        }
+
+        var otherPoem = otherDB.insertPoem(poem.toForm());
+        db.deletePoem(form.id());
+        ctx.json(new MovePoemForm(otherPoem.id(), otherDBPath));
     };
 
     static Handler getRecentPoems = ctx -> {

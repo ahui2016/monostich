@@ -19,6 +19,8 @@ const StichInput = createTextarea();
 const CreatedInput = createInput();
 const SubmitBtn = cc('button', {text: 'Update', classes: 'btn btn-fat'});
 const DelBtn = cc('a', {text: 'delete', classes: 'DelBtn', attr:{'href': '#'}});
+const moveBtn = createLinkElem('/move-poem.html?id='+poemID,
+        {text: 'move', blank: true}).addClass('MoveBtn');
 const FormAlerts = createAlerts();
 
 // 这个按钮是隐藏不用的，为了防止按回车键提交表单
@@ -79,6 +81,7 @@ const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
             });
         }, 2000);
     }),
+    moveBtn,
 ]});
 
 Form.init = () => {

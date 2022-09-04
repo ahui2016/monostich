@@ -161,6 +161,7 @@ textarea {
   margin-left: 0.5rem;
 }
 
+.MoveBtn,
 .DelBtn {
   color: black;
   margin-left: 1rem;
