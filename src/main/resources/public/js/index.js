@@ -129,6 +129,7 @@ const PoemForm = cc('div', { children: [
                 PoemInput.elem().val('');
                 const poem = PoemItem(resp.data);
                 PoemList.elem().prepend(m(poem));
+                poem.init();
                 focus(PoemInput);
             });
         }),

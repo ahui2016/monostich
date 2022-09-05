@@ -21,21 +21,7 @@ const SubmitBtn = cc('button', {text: 'Update', classes: 'btn btn-fat'});
 const DelBtn = cc('a', {text: 'delete', classes: 'DelBtn', attr:{'href': '#'}});
 const moveBtn = createLinkElem('/move-poem.html?id='+poemID,
         {text: 'move', blank: true}).addClass('MoveBtn');
-const FormAlerts = createAlerts();
-
-// 这个按钮是隐藏不用的，为了防止按回车键提交表单
-const HiddenBtn = cc('button', { id: 'submit', text: 'submit' });
-
-const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
-    createFormItem(IdInput, "ID"),
-    createFormItem(TitleInput, 'Title', '标题（说明/备注）'),
-    createFormItem(StichInput, 'Stich', '一句话（例如一条命令、一个网址、一句备忘等等）'),
-    createFormItem(CreatedInput, 'Created', '创建日期'),
-    m(FormAlerts).addClass('mb-3'),
-    m(HiddenBtn).hide().on('click', e => {
-        e.preventDefault();
-        return false;
-    }),
+const ButtonsArea = cc('div', {children: [
     m(SubmitBtn).on('click', event => {
         event.preventDefault();
         const title = valOf(TitleInput, 'trim');
@@ -74,14 +60,31 @@ const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
                 axiosPost('/api/delete-poem', {id: poemID}, FormAlerts, () => {
                     disable(TitleInput);
                     disable(StichInput);
-                    SubmitBtn.hide();
-                    DelBtn.hide();
+                    ButtonsArea.hide();
                     FormAlerts.clear().insert('success', '已彻底删除。');
                 });
             });
         }, 2000);
     }),
     moveBtn,
+]});
+
+const FormAlerts = createAlerts();
+
+// 这个按钮是隐藏不用的，为了防止按回车键提交表单
+const HiddenBtn = cc('button', { id: 'submit', text: 'submit' });
+
+const Form = cc('form', {attr: {autocomplete: 'off'}, children: [
+    createFormItem(IdInput, "ID"),
+    createFormItem(TitleInput, 'Title', '标题（说明/备注）'),
+    createFormItem(StichInput, 'Stich', '一句话（例如一条命令、一个网址、一句备忘等等）'),
+    createFormItem(CreatedInput, 'Created', '创建日期'),
+    m(FormAlerts).addClass('mb-3'),
+    m(HiddenBtn).hide().on('click', e => {
+        e.preventDefault();
+        return false;
+    }),
+    m(ButtonsArea),
 ]});
 
 Form.init = () => {
