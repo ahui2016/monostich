@@ -20,6 +20,8 @@ record FormInt1(int val) {}
 
 record IdForm(String id) {}
 
+record SearchForm(String pattern, boolean prefixOnly) {}
+
 record MovePoemForm(String id, String dbPath) {}
 
 class Util {

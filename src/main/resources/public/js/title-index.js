@@ -66,7 +66,7 @@ function TitleItem(title) {
     self.init = () => {
         self.elem().on('click', e => {
             e.preventDefault();
-            location.href = '/?pattern='+title;
+            location.href = `/?pattern=${title}&prefix=yes`;
         });
     };
 

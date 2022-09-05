@@ -1,5 +1,7 @@
 $('title').text('Home - Monostich');
 
+const prefixOnly = getUrlParam('prefix');
+
 const Alerts = createAlerts();
 const Loading = createLoading();
 
@@ -9,7 +11,7 @@ const HistoryLimit = 20;
 let searchHistoryArr = [];
 
 const NaviBar = cc('div', { children: [
-    span('Monostich (v0.0.5) .. '),
+    span('Monostich (v0.0.6) .. '),
     span('Home '),
     createLinkElem('/', {text: '(reload)'}),
 ]});
@@ -54,12 +56,18 @@ const SearchForm = cc('form', { children: [
     m(SearchInput).addClass('SearchInput'),
     m(SubmitBtn).addClass('ml-1 btn btn-fat').on('click', e => {
         e.preventDefault();
-        const body = { val: valOf(SearchInput, 'trim') };
-        if (body.val == '') {
+        const body = {
+            pattern: valOf(SearchInput, 'trim'),
+            prefixOnly: prefixOnly == 'yes',
+        };
+        if (body.pattern == '') {
             focus(SearchInput);
             return;
         }
-        SearchAlerts.insert('primary', `正在检索: ${body.val}`);
+        SearchAlerts.insert('primary', `正在检索: ${body.pattern}`);
+        if (body.prefixOnly) {
+            SearchAlerts.insert('info', '注意：正在采用 "前缀匹配" 模式。点击 (reload) 恢复正常搜索。');
+        }
 
         PoemList.clear();
         Loading.show();
@@ -77,7 +85,7 @@ const SearchForm = cc('form', { children: [
         () => {
             Loading.hide();
         });
-        updateHistory(body);
+        updateHistory({val: body.pattern});
     }),
     m(SearchAlerts).addClass('mt-2'),
 ]});

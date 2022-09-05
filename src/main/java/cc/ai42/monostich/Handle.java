@@ -6,6 +6,7 @@ import io.javalin.http.NotFoundResponse;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 public class Handle {
 
@@ -117,8 +118,13 @@ public class Handle {
     };
 
     static Handler searchPoems = ctx -> {
-        var form = ctx.bodyAsClass(FormStr1.class);
-        var poems = db.searchPoems(form.val());
+        var form = ctx.bodyAsClass(SearchForm.class);
+        List<Poem> poems;
+        if (form.prefixOnly()) {
+            poems = db.searchPoemsPrefix(form.pattern());
+        } else {
+            poems = db.searchPoems(form.pattern());
+        }
         ctx.json(poems);
     };
 

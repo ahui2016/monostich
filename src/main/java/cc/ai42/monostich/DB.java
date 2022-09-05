@@ -195,6 +195,19 @@ public class DB {
     }
 
     /**
+     * sqlite 的语句使用了 like, 因此默认不分大小写，只搜索前缀匹配的标题。
+     */
+    List<Poem> searchPoemsPrefix(String pattern) {
+        if (pattern.length() == 0) {
+            return List.of();
+        }
+        return jdbi.withHandle(h -> h.select(Stmt.SEARCH_POEMS)
+                .bind("title", pattern+"%")
+                .mapTo(Poem.class)
+                .list());
+    }
+
+    /**
      * 获取全部标题的前 n 个字符
      */
     List<String> getTruncatedTitles(int n) {
