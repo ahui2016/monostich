@@ -9,19 +9,17 @@ public class App {
         if (args.length > 0) {
             port = Integer.parseInt(args[0]);
         }
-        // isDev 主要用来区分使用 jar 里的或 jar 外的静态文件
-        var isDev = args.length > 1 && args[1].equals("dev");
+
         @SuppressWarnings("resource")
         Javalin app = Javalin.create(config ->
                 config.addStaticFiles(staticFiles -> {
                     staticFiles.hostedPath = "/";
-                    if (isDev) {
-                        staticFiles.directory = "src/main/resources/public";
-                        staticFiles.location = Location.EXTERNAL;
-                    } else {
-                        staticFiles.directory = "/public";
-                        staticFiles.location = Location.CLASSPATH;
-                    }
+/*
+                    staticFiles.directory = "src/main/resources/public";
+                    staticFiles.location = Location.EXTERNAL;
+*/
+                    staticFiles.directory = "/public";
+                    staticFiles.location = Location.CLASSPATH;
                 })).start(port);
 
         Print.ln("Database -> " + Handle.db.path());
