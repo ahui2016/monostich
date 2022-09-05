@@ -16,21 +16,21 @@ git clone https://github.com/ahui2016/monostich.git
 cd monostich
 mvn package
 mkdir db
-java -jar ./target/monostich-0.0.4.jar
+java -jar ./target/monostich-0.0.5.jar
 ```
 
 另外，在安装了 JDK 17+ 的前提下，也可以不使用 maven, 而是直接下载 jar: [monostich/releases/](https://github.com/ahui2016/monostich/releases/)
 
 ```shell
 mkdir db
-java -jar ./monostich-0.0.4.jar
+java -jar ./monostich-0.0.5.jar
 ```
 
 ### 手动创建 db 文件夹
 
 在启动本软件时，要求当前目录有一个 'db' 文件夹，如果看到像下面那样的错误，
 表示未找到 'db' 文件夹，请手动创建该文件夹，或进入有该文件夹的目录后再执行
-`java -jar ./monostich-0.0.4.jar` 启动程序。
+`java -jar ./monostich-0.0.5.jar` 启动程序。
 
 ```text
 Exception in thread "main" java.lang.ExceptionInInitializerError
@@ -43,15 +43,15 @@ Caused by: org.jdbi.v3.core.ConnectionException: java.sql.SQLException: path to 
 默认端口是 '7070', 可输入数字参数更改端口：
 
 ```shell
-java -jar ./monostich-0.0.4.jar 7171
+java -jar ./monostich-0.0.5.jar 7171
 ```
 
 ## 主要功能
 
-- 在首页点击 'New' 跳转到 '新增一条记录' 页面。
-- 输入标题和内容，点击 'Submit' 按钮，搞定。
-- 其中，标题是用来方便搜索的，内容则是任意一句话（例如一条命令、一个网址、一句备忘等等）
-- 首页有一个搜索框和最近新增项目列表。
+- 在首页点击 'New' 会出现输入框。
+- 可以输入一句话。点击 'Post' 按钮即完成发布。
+- 如果输入 2 句话（两行，用换行符分隔），第一句会自动成为标题，第二句自动成为内容。
+- 如果输入 3 句或以上，内容会以列表形式显示。
 
 ## 索引功能
 

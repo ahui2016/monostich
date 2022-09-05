@@ -9,15 +9,21 @@ const HistoryLimit = 20;
 let searchHistoryArr = [];
 
 const NaviBar = cc('div', { children: [
-    span('Monostich (v0.0.4) .. '),
+    span('Monostich (v0.0.5) .. '),
     span('Home '),
     createLinkElem('/', {text: '(reload)'}),
 ]});
 
 const DBName = cc('div');
 
+const NewBtn = cc('a', {id: 'show-poem-form-btn', text: 'New', attr:{href: '#'}});
 const NaviLinks = cc('div', {classes: 'NaviLinks', children: [
-    createLinkElem('/new-poem.html', {text: 'New'}),
+    m(NewBtn).on('click', e => {
+        e.preventDefault();
+        PoemForm.show();
+        NewBtn.hide();
+        focus(PoemInput);
+    }),
     createLinkElem('/title-index.html', {text: 'Index'}),
     createLinkElem('/config.html', {text: 'Config'}),
 ]});
@@ -62,6 +68,8 @@ const SearchForm = cc('form', { children: [
             if (poems && poems.length > 0) {
                 SearchAlerts.insert('success', `找到 ${poems.length} 条记录。`);
                 appendToList(PoemList, poems.map(PoemItem));
+                NewBtn.show();
+                PoemForm.hide();
             } else {
                 SearchAlerts.insert('primary', '找不到。');
             }
@@ -74,13 +82,60 @@ const SearchForm = cc('form', { children: [
     m(SearchAlerts).addClass('mt-2'),
 ]});
 
+const PoemInput = createTextarea(5);
+const PostBtn = cc('button', {text: 'Post', classes: 'btn btn-fat'});
+const FormAlerts = createAlerts();
+
+// 这个按钮是隐藏不用的，为了防止按回车键提交表单
+const HiddenBtn2 = cc('button', { id: 'submit', text: 'submit' });
+
+const PoemForm = cc('div', { children: [
+    m(PoemInput).attr({autocomplete: 'off'})
+                .addClass("mb-1 form-textinput form-textinput-fat"),
+    m(HiddenBtn2).hide().on('click', e => {
+        e.preventDefault();
+        return false;
+    }),
+    m('div').addClass('PostBtnArea').append(
+        m(PostBtn).on('click', event => {
+            event.preventDefault();
+            const content = valOf(PoemInput, 'trim');
+            if (!content) {
+                focus(PoemInput);
+                return;
+            }
+            const lines = content.split(/\r?\n/)
+                    .map(s => s.trim())
+                    .filter(x => !!x);
+
+            const title = lines.shift();
+            let stich = "";
+            if (lines.length > 0) {
+                stich = lines.join('\n');
+            }
+            const body = {
+                title: title,
+                stich: stich,
+            };
+            axiosPost('/api/insert-poem', body, Alerts, resp => {
+                PoemInput.elem().val('');
+                const poem = PoemItem(resp.data);
+                PoemList.elem().prepend(m(poem));
+                focus(PoemInput);
+            });
+        }),
+    ),
+    m(FormAlerts).addClass('mb-3'),
+]});
+
 $('#root').append(
     m(NaviBar).addClass('text-large'),
     m(DBName),
     m(NaviLinks).addClass('text-right mr-1'),
+    m(Alerts).addClass('my-3'),
     m(SearchForm).addClass('my-3'),
     m(HistoryArea).hide(),
-    m(Alerts).addClass('mt-2'),
+    m(PoemForm).addClass('my-3').hide(),
     m(Loading).addClass('my-3'),
     m(PoemList).addClass('my-3'),
 );

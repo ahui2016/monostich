@@ -92,6 +92,9 @@ textarea {
 .mb-0 {
   margin-bottom: 0;
 }
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
 .mb-3 {
   margin-bottom: 1rem;
 }
@@ -184,6 +187,8 @@ textarea {
 .HistoryItems > a {
   color: var(--grey);
   margin-left: 0.5rem;
+  display: inline-flex;
+  flex-wrap: wrap;
 }
 
 .TitleList {
@@ -200,6 +205,11 @@ textarea {
   padding: .35em .65em;
   display: inline-block;
   cursor: pointer;
+}
+
+.PostBtnArea {
+  width: 95%;
+  text-align: right;
 }
 
 .Loading {
