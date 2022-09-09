@@ -3,7 +3,7 @@ class LinkOptions {}
 class AxiosError {}
 
 const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
-const GROUP_POEMS_LENGTH_LIMIT = 60;
+const GROUP_POEMS_LENGTH_LIMIT = 50;
 
 // 获取地址栏的参数。
 function getUrlParam(param) {

@@ -54,6 +54,7 @@ function reloadTitles(n) {
  * @returns {mjComponent}
  */
 function TitleItem(title) {
+    title = title.trim();
     const self = cc('div', {
         id: 'title-'+title,
         classes: 'TitleItem',

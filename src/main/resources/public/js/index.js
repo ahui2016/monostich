@@ -66,7 +66,7 @@ const SearchForm = cc('form', { children: [
         }
         SearchAlerts.insert('primary', `正在检索: ${body.pattern}`);
         if (body.prefixOnly) {
-            SearchAlerts.insert('info', '注意：正在采用 "前缀匹配" 模式。点击 (reload) 恢复正常搜索。');
+            SearchAlerts.insert('info', '注意：正在采用 "仅前缀匹配" 模式。点击 (reload) 恢复正常搜索。');
         }
 
         PoemList.clear();
