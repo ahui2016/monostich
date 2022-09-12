@@ -59,9 +59,6 @@ function TitleItem(title) {
         id: 'title-'+title,
         classes: 'TitleItem',
         text: title,
-        children: [
-            createLinkElem('/?pattern='+title, {text: title}),
-        ],
     });
 
     self.init = () => {
