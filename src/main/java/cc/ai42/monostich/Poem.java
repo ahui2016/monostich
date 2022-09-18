@@ -10,7 +10,7 @@ import java.util.Map;
  * @param created 创建时间
  */
 public record Poem(String id, String title, String stich, long created) {
-	Map<String, Object> toMap() {
+    Map<String, Object> toMap() {
         return Map.of(
                 "id", id,
                 "title", title,

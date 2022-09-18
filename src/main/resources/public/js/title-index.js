@@ -39,7 +39,8 @@ function reloadTitles(n) {
         const titles = resp.data;
         if (titles && titles.length > 0) {
             TitleList.clear();
-            appendToList(TitleList, titles.map(TitleItem));
+            const items = titlesToComponents(titles);
+            appendToList(TitleList, items);
         } else {
             Alerts.insert('info', '空空如也');
         }
@@ -53,10 +54,10 @@ function reloadTitles(n) {
  * @param {string} title
  * @returns {mjComponent}
  */
-function TitleItem(title) {
+function TitleItem(title, id) {
     title = title.trim();
     const self = cc('div', {
-        id: 'title-'+title,
+        id: id,
         classes: 'TitleItem',
         text: title,
     });
@@ -64,9 +65,19 @@ function TitleItem(title) {
     self.init = () => {
         self.elem().on('click', e => {
             e.preventDefault();
-            location.href = `/?pattern=${title}&prefix=yes`;
+            const pattern = encodeURIComponent(title);
+            location.href = `/?pattern=${pattern}&prefix=yes`;
         });
     };
 
     return self;
+}
+
+function titlesToComponents(titles) {
+    let components = [];
+    for (let i = 0; i < titles.length; i++) {
+        const id = 't-' + (i + 1);
+        components.push(TitleItem(titles[i], id))
+    }
+    return components;
 }

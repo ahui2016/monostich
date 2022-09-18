@@ -87,10 +87,10 @@ public class DB {
     }
 
     Optional<String> getCurrentId(Handle h) {
-    	return h.select(Stmt.GET_METADATA)
-    			.bind("name", Stmt.CURRENT_ID_NAME)
-    			.mapTo(String.class)
-    			.findOne();
+        return h.select(Stmt.GET_METADATA)
+                .bind("name", Stmt.CURRENT_ID_NAME)
+                .mapTo(String.class)
+                .findOne();
     }
 
     Optional<String> getCurrentId() {
@@ -98,17 +98,17 @@ public class DB {
     }
 
     void updateCurrentId(Handle h, String id) {
-    	h.createUpdate(Stmt.UPDATE_METADATA)
-    			.bind("name", Stmt.CURRENT_ID_NAME)
+        h.createUpdate(Stmt.UPDATE_METADATA)
+                .bind("name", Stmt.CURRENT_ID_NAME)
                 .bind("value", id)
-    			.execute();
+                .execute();
     }
     
     String getNextId(Handle h) {
-    	var id = getCurrentId(h).orElseThrow();
-    	var nextId = ShortID.parse(id).next().toString();
-    	updateCurrentId(h, nextId);
-    	return nextId;
+        var id = getCurrentId(h).orElseThrow();
+        var nextId = ShortID.parse(id).next().toString();
+        updateCurrentId(h, nextId);
+        return nextId;
     }
 
     void initCurrentId() {
