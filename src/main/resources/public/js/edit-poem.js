@@ -31,11 +31,6 @@ const ButtonsArea = cc('div', {children: [
             focus(TitleInput);
             return;
         }
-        if (!stichRaw) {
-            FormAlerts.insert('danger', 'Stich必填');
-            focus(StichInput);
-            return;
-        }
         const stich = stichRaw.split(/\r?\n/)
                 .map(s => s.trim())
                 .filter(x => !!x)
